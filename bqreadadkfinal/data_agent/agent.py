@@ -7,6 +7,7 @@
 
 import google.auth
 import dotenv
+import os
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.tools.bigquery import BigQueryCredentialsConfig, BigQueryToolset
 from google.adk.tools.bigquery.config import BigQueryToolConfig
