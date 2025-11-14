@@ -18,13 +18,13 @@ from .tools import *
 
 dotenv.load_dotenv()
 
-PROJECT_ID = os.getenv('BIGQUERY_PROJECT_ID')
-BIGQUERY_DATASET = os.getenv('BIGQUERY_DATASET')
-NOMBRE_EMPRESA = os.getenv('NOMBRE_EMPRESA')
-DATOS_ESPECIFICOS = os.getenv('DATOS_ESPECIFICOS')
-ANALYTICS_AGENT_MODEL = os.getenv('ANALYTICS_AGENT_MODEL')
-LLM_1_NAME = os.getenv('LLM_1_NAME')
-LLM_1_MODELO = os.getenv('LLM_1_MODELO')
+PROJECT_ID = os.getenv("BIGQUERY_PROJECT_ID")
+BIGQUERY_DATASET = os.getenv("BIGQUERY_DATASET")
+NOMBRE_EMPRESA = os.getenv("NOMBRE_EMPRESA")
+DATOS_ESPECIFICOS = os.getenv("DATOS_ESPECIFICOS")
+ANALYTICS_AGENT_MODEL = os.getenv("ANALYTICS_AGENT_MODEL")
+LLM_1_NAME = os.getenv("LLM_1_NAME")
+LLM_1_MODELO = os.getenv("LLM_1_MODELO")
 
 
 
@@ -51,7 +51,7 @@ bigquery_toolset = BigQueryToolset(
 new_instruction = """
 Eres un analista de datos senior encargado de clasificar con precisión la
 intención del usuario con respecto a una base de datos específica y formular preguntas específicas sobre
-los datos almacenados en el project ID: '{PROJECT_ID}' del conjunto de datos '{BIGQUERY_DATASET}' , 
+los datos almacenados en el project ID: PROJECT_ID del conjunto de datos BIGQUERY_DATASET , 
 y un agente de ciencia de datos Python (`call_analytics_agent`), si es necesario cuando te piden graficos.
 
 <INSTRUCTIONS>
@@ -66,11 +66,11 @@ Reglas:
     amablemente explicando tus capacidades (consultar datos y generar gráficos) 
     y no uses ninguna herramienta.
     Ejemplo de respuesta: "Hola, soy un asistente de análisis de datos. Puedo responder 
-    preguntas sobre los datos de "{NOMBRE_EMPRESA}" y generar gráficos. ¿En qué te puedo ayudar?".
+    preguntas sobre los datos de NOMBRE_EMPRESA y generar gráficos. ¿En qué te puedo ayudar?".
 
-2.  Si la pregunta del usuario es sobre datos específicos '{DATOS_ESPECIFICOS}' , 
+2.  Si la pregunta del usuario es sobre datos específicos DATOS_ESPECIFICOS , 
     usa la herramienta `bigquery_toolset` para consultar la base de datos
-    en el proyecto '{PROJECT_ID}', dataset '{BIGQUERY_DATASET}'.
+    en el proyecto PROJECT_ID, dataset BIGQUERY_DATASET.
 
 3.  Si el usuario pide explícitamente un gráfico, una visualización o un análisis
    que lo requiera, usa la herramienta `call_analytics_agent`.
@@ -82,8 +82,8 @@ pregunta del usuario es simple (ej. "gracias", "ok", "¿y ahora?"),
 """
 
 root_agent = LlmAgent(
- model='{LLM_1_MODELO}', # Recomiendo usar 1.5 Flash o Pro para mejor seguimiento de instrucciones JSON
- name="{LLM_1_NAME}",
+ model=LLM_1_MODELO, # Recomiendo usar 1.5 Flash o Pro para mejor seguimiento de instrucciones JSON
+ name=LLM_1_NAME,
  description="Agente para responder preguntas sobre datos y modelos de BigQuery y ejecutar y genera datos para gráficos",
  instruction=new_instruction,
  tools=[bigquery_toolset, call_analytics_agent]
