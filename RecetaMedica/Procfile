@@ -1,0 +1,1 @@
+web: functions-framework --target=procesar_receta_http --source=cloud_function.py --port=$PORT
