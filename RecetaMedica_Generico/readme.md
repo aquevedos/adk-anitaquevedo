@@ -1,6 +1,6 @@
 crea un agente en la carpeta 2026/RecetaMedica , hecho con ADK para que pueda extraer los campos que estan siguiendo las buenas practicas de ADK, la data que extraigas del los pdf tienenes que guardarlo en Bigquery en una tabla con un dataset que diga recetamedicas en el proyecto, 	agentspace-demos-466121
 
-cd /usr/local/google/home/anitaquevedo/antigravity/adk-anitaquevedo/RecetaMedica
+cd /usr/local/google/home/anitaquevedo/antigravity/adk-anitaquevedo/RecetaMedica_Generico
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt

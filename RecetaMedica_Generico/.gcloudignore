@@ -1,0 +1,15 @@
+.gcloudignore
+.git
+.gitignore
+.venv/
+__pycache__/
+temp_*
+main.py
+web_app.py
+demo_gerencia.py
+limpiar_tabla.py
+deploy_cloud_run_function.sh
+*.pdf
+*.jpg
+*.jpeg
+*.png

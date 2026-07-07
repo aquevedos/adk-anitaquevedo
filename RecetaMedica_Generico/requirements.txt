@@ -1,0 +1,11 @@
+google-adk  --pre
+google-genai>=1.32.0
+google-cloud-bigquery>=3.20.0
+google-cloud-aiplatform>=1.111.0
+pydantic>=2.7.0
+python-dotenv>=1.0.0
+pymupdf>=1.26.4
+fastapi>=0.100.0
+uvicorn>=0.22.0
+python-multipart>=0.0.6
+functions-framework>=3.5.0
