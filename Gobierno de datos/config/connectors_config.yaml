@@ -1,0 +1,60 @@
+# Configuración de Conectores Multi-Cloud e Híbridos para el Cliente
+
+# GCP (Google Cloud Platform)
+gcp:
+  enabled: true
+  project_id: "corp-analytics-prod"
+  location: "us-central1"
+  credentials_type: "APPLICATION_DEFAULT_CREDENTIALS" # o SERVICE_ACCOUNT_KEY
+  dataplex_lake: "enterprise-data-lake"
+  bigquery_datasets:
+    - "marketing_governance"
+    - "accounting_ledger"
+  dlp_inspection_template: "projects/corp-analytics-prod/locations/global/inspectTemplates/default-pii-template"
+
+# AWS (Amazon Web Services)
+aws:
+  enabled: true
+  region: "us-east-1"
+  redshift_cluster_id: "dw-enterprise-prod"
+  redshift_database: "dw_enterprise_prod"
+  s3_governed_buckets:
+    - "corp-ecommerce-raw"
+    - "corp-analytics-export"
+  glue_catalog_id: "123456789012"
+
+# Microsoft Azure
+azure:
+  enabled: true
+  tenant_id: "tenant-uuid-placeholder"
+  synapse_workspace: "synapse-enterprise-workspace"
+  adls_gen2_account: "adlsenterpriselake"
+  purview_account: "purview-governance-hub"
+
+# On-Premises & Hybrid Databases
+onprem:
+  enabled: true
+  mysql:
+    host: "mysql-1c645071-google-beed.j.aivencloud.com"
+    port: 10283
+    database: "bdcomercial"
+    user: "avnadmin"
+  postgresql:
+    host: "10.0.1.50"
+    port: 5432
+    database: "db_wms_logistics"
+    schema: "public"
+  oracle:
+    host: "10.0.1.60"
+    port: 1521
+    service_name: "ORCL_ERP"
+
+# SaaS Enterprise
+saas:
+  enabled: true
+  salesforce:
+    instance_url: "https://empresa.my.salesforce.com"
+    objects: ["Contact", "Account", "Lead"]
+  sap:
+    system_id: "PRD"
+    client: "100"

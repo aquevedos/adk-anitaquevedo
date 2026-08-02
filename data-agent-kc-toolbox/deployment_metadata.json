@@ -1,0 +1,10 @@
+{
+  "remote_agent_engine_id": "projects/685524482936/locations/us-central1/reasoningEngines/6457355373870317568",
+  "deployment_target": "agent_engine",
+  "is_a2a": false,
+  "deployment_timestamp": "2026-05-20T06:50:06.881025",
+  "mcp_toolbox_url": "https://data-agent-mcp-toolbox-t5exhgl5jq-uc.a.run.app",
+  "mcp_toolbox_service_account": "toolbox-identity@gen-lang-client-0186314259.iam.gserviceaccount.com",
+  "mcp_toolbox_deployment_timestamp": "2026-05-20T06:43:47.126351",
+  "service_account": "service-685524482936@gcp-sa-aiplatform-re.iam.gserviceaccount.com"
+}

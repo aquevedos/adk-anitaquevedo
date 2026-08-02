@@ -1,0 +1,123 @@
+# ==============================================================================
+# Configuración Central de Gobierno de Datos — CMI (Corporación Multi Inversiones)
+# ==============================================================================
+
+version: "2.0"
+cliente: "Corporación Multi Inversiones (CMI)"
+agente:
+  nombre: "Agente Especialista en Gobierno de Datos CMI"
+  version: "2.1.0"
+  descripcion: "Especialista autónomo en gobierno, calidad de datos, linaje, cumplimiento de políticas y analítica orquestada en Google Cloud."
+  modelo: "gemini-3-flash-preview"
+  temperatura: 0.1
+
+# ------------------------------------------------------------------------------
+# Unidades de Negocio y Dominios de CMI
+# ------------------------------------------------------------------------------
+unidades_negocio:
+  - id: "cmi_alimentos"
+    nombre: "CMI Alimentos"
+    descripcion: "Operaciones de Molinos Modernos, Negocio B4B, Avícola, Porcícola y Restaurantes (Pollo Campero)."
+    data_steward_lider: "steward.alimentos@cmi.com"
+    datasets_asociados:
+      - "retail_demo"
+      - "alimentos_supply_chain"
+      - "alimentos_ventas_b2b"
+    politicas_aplicables:
+      - "POL-ALM-01: Trazabilidad de Lotes y Frescura de Inventario"
+      - "POL-ALM-02: Calidad e Inocuidad en Cadena de Suministro"
+      - "POL-ALM-03: SLA de Devoluciones y Garantías a Clientes"
+
+  - id: "cmi_capital"
+    nombre: "CMI Capital"
+    descripcion: "Operaciones de Energía Renovable, Desarrollo Inmobiliario y Unidad Financiera."
+    data_steward_lider: "steward.capital@cmi.com"
+    datasets_asociados:
+      - "capital_energia_metricas"
+      - "capital_inmobiliario_proyectos"
+    politicas_aplicables:
+      - "POL-CAP-01: Clasificación de Datos Financieros y Confidencialidad"
+      - "POL-CAP-02: Retención y Auditoría de Activos Energéticos"
+
+  - id: "cmi_corporativo"
+    nombre: "CMI Servicios Compartidos"
+    descripcion: "Finanzas corporativas, RRHH, Auditoría Interna y TI Corporativa."
+    data_steward_lider: "steward.corporativo@cmi.com"
+    datasets_asociados:
+      - "retail_demo"
+      - "corporativo_rrhh"
+    politicas_aplicables:
+      - "POL-CORP-01: Protección de Datos Personales (PII)"
+      - "POL-CORP-02: Gobernanza y Linaje de Datos Maestros (MDM)"
+
+# ------------------------------------------------------------------------------
+# Reglas y Umbrales de Calidad de Datos (Data Quality Framework)
+# ------------------------------------------------------------------------------
+reglas_calidad:
+  tolerancia_nulos_maxima_pct: 5.0
+  tolerancia_duplicados_maxima_pct: 0.0
+  umbral_alerta_devoluciones_pct: 8.0
+  frescura_datos_max_horas: 24
+  requiere_integridad_referencial: true
+  validar_aspectos_dataplex: true
+
+# ------------------------------------------------------------------------------
+# Niveles de Clasificación y Seguridad de Datos
+# ------------------------------------------------------------------------------
+clasificacion_seguridad:
+  niveles:
+    - codigo: "CONFIDENCIAL_FINANCIERO"
+      descripcion: "Márgenes, costos unitarios, estados financieros no públicos."
+      requiere_enmascaramiento: false
+      restriccion_exportacion: "Solo lectura autenticada"
+    - codigo: "PII_RESTRINGIDO"
+      descripcion: "Datos de clientes y empleados (DPI/NIT, correos personales, teléfonos)."
+      requiere_enmascaramiento: true
+      restriccion_exportacion: "Anonimización obligatoria"
+    - codigo: "USO_INTERNO"
+      descripcion: "Catálogos de productos, precios públicos, pedidos anonimizados."
+      requiere_enmascaramiento: false
+      restriccion_exportacion: "Uso interno CMI"
+
+# ------------------------------------------------------------------------------
+# Glosario Empresarial CMI (Business Glossary)
+# ------------------------------------------------------------------------------
+glosario_terminos:
+  - termino: "Cliente Premium"
+    unidad_negocio: "cmi_alimentos"
+    definicion: "Cliente con tráfico por Email, edad >= 35 años y al menos 1 pedido completado en los últimos 12 meses."
+    formula_sql: "users.traffic_source = 'Email' AND users.age >= 35 AND COUNT(orders) >= 1"
+    data_steward: "analisis.clientes@cmi.com"
+
+  - termino: "Margen Bruto Realizado (Markup)"
+    unidad_negocio: "cmi_corporativo"
+    definicion: "Relación entre el precio final pagado por el cliente y el costo del producto."
+    formula_sql: "SUM(order_items.sale_price) / SUM(inventory_items.cost)"
+    rango_objetivo: "1.85x - 1.95x"
+    data_steward: "finanzas.control@cmi.com"
+
+  - termino: "Tasa de Devoluciones (Return Rate)"
+    unidad_negocio: "cmi_alimentos"
+    definicion: "Porcentaje de artículos devueltos respecto al total de artículos entregados."
+    formula_sql: "COUNT(CASE WHEN status = 'Returned' THEN 1 END) * 100.0 / COUNT(*)"
+    umbral_maximo_tolerable_pct: 8.0
+    data_steward: "calidad.suministro@cmi.com"
+
+  - termino: "OTIF (On-Time In-Full)"
+    unidad_negocio: "cmi_alimentos"
+    definicion: "Porcentaje de pedidos de clientes entregados a tiempo y con la cantidad completa solicitada."
+    rango_objetivo: ">= 95%"
+    data_steward: "logistica.cmi@cmi.com"
+
+# ------------------------------------------------------------------------------
+# Conexiones e Infraestructura GCP
+# ------------------------------------------------------------------------------
+infraestructura:
+  gcp_project_id: "agentspace-demos-466121"
+  region: "us-central1"
+  bigquery_dataset_default: "retail_demo"
+  gcs_bucket_politicas: "retail-policies-agentspace-demos-466121"
+  dataplex_entry_group: "retail-policies"
+  dataplex_entry_type: "policy-document"
+  mcp_toolbox_service_name: "data-agent-mcp-toolbox-enriched"
+  mcp_toolbox_url: ""

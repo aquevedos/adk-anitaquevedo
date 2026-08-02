@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Shoes - Demand Planning & CalzaIntel Agent</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-shoe-prints logo-icon"></i>
+                <div class="logo-text">
+                    <h1>Price<span>Shoes</span></h1>
+                    <p>Demand Planning & AI Agents</p>
+                </div>
+            </div>
+            <div class="project-info">
+                <span class="badge"><i class="fa-solid fa-circle-nodes"></i> agentspace-demos-466121</span>
+                <span class="badge secondary"><i class="fa-solid fa-database"></i> price_shoes_test</span>
+            </div>
+        </header>
+
+        <!-- STORYTELLING STORY SLIDER -->
+        <section class="story-section glass-panel">
+            <div class="section-title">
+                <h2><i class="fa-solid fa-book-open"></i> Storytelling: El Reto de la Moda y Estacionalidad</h2>
+                <div class="slider-controls">
+                    <button class="slider-btn" id="prev-story"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="slider-btn" id="next-story"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="story-slider">
+                <!-- Slide 1 -->
+                <div class="story-slide active" data-slide="0">
+                    <div class="story-content">
+                        <div class="story-text">
+                            <span class="slide-num">Capítulo 1</span>
+                            <h3>El Gran Desafío de la Estacionalidad Cruzada</h3>
+                            <p>En el retail de calzado, la demanda es una montaña rusa. Mientras que las <strong>Sandalias</strong> explotan en verano (Abril-Agosto) y desaparecen en invierno, las <strong>Botas</strong> sufren el efecto opuesto, alcanzando su pico máximo entre Octubre y Febrero.</p>
+                            <p>Administrar el inventario basándose en promedios históricos estáticos conduce invariablemente a dos problemas fatales: sobre-inventario de capital estancado, o desabastecimiento severo en temporada alta.</p>
+                        </div>
+                        <div class="story-visual sandals-boots-split">
+                            <div class="vis-item hot">
+                                <i class="fa-solid fa-sun icon-sun"></i>
+                                <h4>Sandalias (Verano)</h4>
+                                <p>Pico de demanda 1.8x</p>
+                            </div>
+                            <div class="vis-item cold">
+                                <i class="fa-solid fa-snowflake icon-snow"></i>
+                                <h4>Botas (Invierno)</h4>
+                                <p>Pico de demanda 2.0x</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="story-slide" data-slide="1">
+                    <div class="story-content">
+                        <div class="story-text">
+                            <span class="slide-num">Capítulo 2</span>
+                            <h3>La Pesadilla de los Agotados (Stock-outs)</h3>
+                            <p>Durante la simulación histórica, identificamos picos críticos de <strong>Stock-out</strong> intencionales:</p>
+                            <ul>
+                                <li>En <strong>Diciembre</strong>, las botas experimentaron una demanda voraz de regalos de fin de año, vaciando el stock entre el 15 y el 25 de diciembre y generando ventas perdidas millonarias.</li>
+                                <li>En <strong>Julio</strong>, las sandalias se agotaron a principios de mes por compras vacacionales imprevistas.</li>
+                            </ul>
+                            <p>Cada día sin stock representa clientes insatisfechos que se van con la competencia. ¿Cómo prevenirlo?</p>
+                        </div>
+                        <div class="story-visual lost-sales-meter">
+                            <div class="meter-fill" style="width: 82%;">
+                                <span>Pérdidas por Stockout: Alta Prioridad</span>
+                            </div>
+                            <div class="stockout-alerts">
+                                <span class="alert-tag"><i class="fa-solid fa-triangle-exclamation"></i> Sandalias (Julio)</span>
+                                <span class="alert-tag"><i class="fa-solid fa-triangle-exclamation"></i> Botas (Diciembre)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="story-slide" data-slide="2">
+                    <div class="story-content">
+                        <div class="story-text">
+                            <span class="slide-num">Capítulo 3</span>
+                            <h3>Predicción de Demanda Inteligente & Stock de Seguridad</h3>
+                            <p>Aquí es donde entra la Inteligencia Artificial. Entrenamos un modelo de series de tiempo <strong>ARIMA_PLUS</strong> directamente en BigQuery.</p>
+                            <p>Este modelo no solo pronostica el volumen de ventas futuros; calcula la variabilidad de la demanda durante el tiempo de entrega del proveedor (Lead Time). Esto nos permite determinar con precisión científica el <strong>Stock de Seguridad (Safety Stock)</strong> ideal para resistir los picos repentinos sin sobrecargar la bodega.</p>
+                        </div>
+                        <div class="story-visual formula-box">
+                            <div class="math-expr">
+                                Pedido Sugerido = Demanda en Lead Time + Stock de Seguridad - Stock Actual
+                            </div>
+                            <div class="chips">
+                                <span><i class="fa-solid fa-robot"></i> BigQuery ML ARIMA</span>
+                                <span><i class="fa-solid fa-circle-check"></i> Stock de Seguridad Dinámico</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-dots" id="slider-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+        </section>
+
+        <!-- MAIN LAYOUT GRID -->
+        <main class="dashboard-grid">
+            
+            <!-- LEFT PANEL: CATALOG & METRICS -->
+            <div class="left-panel">
+                <!-- METRIC CARDS -->
+                <div class="metrics-row">
+                    <div class="metric-card glass-panel purple-glow">
+                        <div class="metric-header">
+                            <span>Productos Totales</span>
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <h3 id="metric-total-products">-</h3>
+                    </div>
+                    <div class="metric-card glass-panel cyan-glow">
+                        <div class="metric-header">
+                            <span>Críticos / Alerta</span>
+                            <i class="fa-solid fa-circle-exclamation text-alert"></i>
+                        </div>
+                        <h3 id="metric-critical-products">-</h3>
+                    </div>
+                </div>
+
+                <!-- CATALOG TABLE -->
+                <div class="catalog-card glass-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-list-check"></i> Catálogo e Inventario Actual</h3>
+                        <p class="subtitle">Selecciona un producto para visualizar su proyección</p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="catalog-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre del Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Stock Actual</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 20px;">Cargando catálogo...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: DEMAND CHART & FORECAST -->
+            <div class="right-panel">
+                <div class="chart-card glass-panel">
+                    <div class="panel-header chart-header-row">
+                        <div>
+                            <h3 id="chart-product-title">Selecciona un producto</h3>
+                            <p class="subtitle" id="chart-product-subtitle">Historial de 60 días + 30 días de Pronóstico ARIMA</p>
+                        </div>
+                        <div id="chart-product-badge"></div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="demandChart"></canvas>
+                    </div>
+                    <div class="chart-legend-custom">
+                        <span class="legend-item"><span class="legend-dot history"></span> Historial (60d)</span>
+                        <span class="legend-item"><span class="legend-dot forecast"></span> Proyección ARIMA (30d)</span>
+                        <span class="legend-item" id="legend-promo" style="display: none;"><span class="legend-dot promo"></span> Proyección Promocional (30d)</span>
+                        <span class="legend-item"><span class="legend-dot interval"></span> Intervalo de Confianza (90%)</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- ADVANCED COMMERCIAL TOOLS SECTION -->
+        <section class="advanced-tools-section glass-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-calculator-combined"></i> Módulos Avanzados de Negocio (Price Optimization & Promotions)</h2>
+                <p class="subtitle">Herramientas estratégicas para maximizar ingresos y optimizar compras de inventario</p>
+            </div>
+            
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="promo-sim"><i class="fa-solid fa-chart-line"></i> Simulador de Promociones</button>
+                    <button class="tab-btn" data-tab="price-opt"><i class="fa-solid fa-tags"></i> Optimización de Precios</button>
+                    <button class="tab-btn" data-tab="creative-agent"><i class="fa-solid fa-wand-magic-sparkles"></i> Agente Creativo (Catálogos)</button>
+                </div>
+                
+                <div class="tabs-content">
+                    <!-- Tab 1: Promo Simulator -->
+                    <div class="tab-pane active" id="promo-sim">
+                        <div class="promo-sim-layout">
+                            <div class="promo-inputs">
+                                <div class="form-group">
+                                    <label for="promo-category">Categoría de Calzado:</label>
+                                    <select id="promo-category">
+                                        <option value="Sandals">Sandals (Sandalias)</option>
+                                        <option value="Boots">Boots (Botas)</option>
+                                        <option value="Sneakers">Sneakers (Tenis)</option>
+                                        <option value="Dress Shoes">Dress Shoes (Formal)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="promo-lift">Incremento Estimado de Ventas (%):</label>
+                                    <input type="number" id="promo-lift" value="30" min="5" max="200">
+                                </div>
+                                <button class="btn-primary" id="btn-run-simulation"><i class="fa-solid fa-play"></i> Ejecutar Simulación</button>
+                            </div>
+                            
+                            <div class="promo-results">
+                                <div class="promo-metric-card glass-panel">
+                                    <span>Unidades Extras Necesarias</span>
+                                    <h4 id="sim-extra-qty">0</h4>
+                                </div>
+                                <div class="promo-metric-card glass-panel">
+                                    <span>Costo Estimado de Adquisición</span>
+                                    <h4 id="sim-extra-cost">$0.00 MXN</h4>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="simulation-table-wrapper">
+                            <table id="simulation-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Producto</th>
+                                        <th>Nombre</th>
+                                        <th>Stock Actual</th>
+                                        <th>Ventas Proyectadas (Normal)</th>
+                                        <th>Ventas Proyectadas (Promo)</th>
+                                        <th>Compra Extra Requerida</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 15px;">Configure y ejecute una simulación.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab 2: Pricing Optimization -->
+                    <div class="tab-pane" id="price-opt">
+                        <div class="pricing-table-wrapper">
+                            <table id="pricing-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Producto</th>
+                                        <th>Precio Actual</th>
+                                        <th>Precio Propuesto</th>
+                                        <th>Acción Sugerida</th>
+                                        <th>Justificación Analítica</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 20px;">Cargando sugerencias de precios...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Creative Agent -->
+                    <div class="tab-pane" id="creative-agent">
+                        <div class="creative-agent-layout">
+                            <div class="creative-left">
+                                <div class="upload-dropzone" id="upload-zone">
+                                    <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                                    <h3>Arrastra una foto de calzado aquí</h3>
+                                    <p>o haz clic para explorar tus archivos</p>
+                                    <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
+                                </div>
+                                <div class="image-preview-container" id="preview-container" style="display: none;">
+                                    <img id="image-preview" src="" alt="Vista previa del calzado">
+                                    <button class="btn-remove-image" id="btn-remove-img"><i class="fa-solid fa-trash-can"></i> Quitar Imagen</button>
+                                </div>
+                                <button class="btn-primary" id="btn-process-image" style="width: 100%; margin-top: 15px;" disabled>
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Procesar Foto con IA
+                                </button>
+                            </div>
+                            
+                            <div class="creative-right">
+                                <div class="creative-loading" id="creative-loading" style="display: none;">
+                                    <i class="fa-solid fa-spinner fa-spin loading-spinner"></i>
+                                    <p>Gemini está analizando la imagen...</p>
+                                </div>
+                                <div class="creative-results-placeholder" id="creative-results-placeholder">
+                                    <i class="fa-solid fa-images placeholder-icon"></i>
+                                    <p>Sube y procesa una imagen para ver los análisis de Copywriting y Retoque de Portales de Proveedores.</p>
+                                </div>
+                                
+                                <div class="creative-results-content" id="creative-results-content" style="display: none;">
+                                    <div class="results-column-group">
+                                        <!-- Column 1: Copywriting -->
+                                        <div class="res-card glass-panel">
+                                            <h4><i class="fa-solid fa-pen-nib"></i> Copywriting Comercial</h4>
+                                            <p id="res-copywriting" class="copy-text">Cargando...</p>
+                                            <div class="tariff-box">
+                                                <h5><i class="fa-solid fa-passport"></i> Clasificación y Arancel (México)</h5>
+                                                <div class="tariff-row">
+                                                    <span>Fracción Arancelaria:</span>
+                                                    <strong id="res-hs-code">-</strong>
+                                                </div>
+                                                <div class="tariff-row">
+                                                    <span>Arancel de Importación:</span>
+                                                    <strong id="res-tariff-rate">-</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Column 2: Retoque -->
+                                        <div class="res-card glass-panel">
+                                            <h4><i class="fa-solid fa-sliders"></i> Copiloto de Retoque</h4>
+                                            <div class="checklist">
+                                                <div class="check-item">
+                                                    <i class="fa-solid fa-circle-check" id="check-bg"></i>
+                                                    <span>Fondo eliminado (blanco/transparente)</span>
+                                                </div>
+                                                <div class="check-item">
+                                                    <i class="fa-solid fa-circle-check" id="check-light"></i>
+                                                    <span>Iluminación equilibrada</span>
+                                                </div>
+                                                <div class="check-item">
+                                                    <i class="fa-solid fa-circle-check" id="check-center"></i>
+                                                    <span>Calzado centrado y alineado</span>
+                                                </div>
+                                            </div>
+                                            <div class="score-row">
+                                                <span>Puntuación de Imagen:</span>
+                                                <strong id="res-image-score">0/10</strong>
+                                            </div>
+                                            <div class="approval-box">
+                                                <span>Estatus de Aprobación:</span>
+                                                <span class="status-badge" id="res-approval-status">PENDIENTE</span>
+                                            </div>
+                                            <div class="cloud-path-box">
+                                                <span>Ruta Cloud Storage:</span>
+                                                <code id="res-cloud-path">-</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLOATING CHAT AGENT (EFECTO WOW) -->
+        <section class="chat-pane-section glass-panel" id="chat-agent-panel">
+            <div class="chat-header">
+                <div class="agent-avatar">
+                    <i class="fa-solid fa-brain"></i>
+                    <span class="online-indicator"></span>
+                </div>
+                <div class="agent-title">
+                    <h3>CalzaIntel Agent</h3>
+                    <p>Powered by Gemini 2.5 Flash & ADK</p>
+                </div>
+                <button class="clear-chat-btn" id="clear-chat-btn" title="Limpiar Conversación">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message system-msg">
+                    <div class="msg-content">
+                        <strong>CalzaIntel:</strong> ¡Hola! Soy CalzaIntel, tu asesor inteligente de abastecimiento de Price Shoes. Puedo consultar el catálogo actual en BigQuery, mostrarte predicciones de demanda del modelo ARIMA y recomendarte cuántas unidades debes ordenar. 
+                        <br><br>
+                        <em>Prueba preguntándome sobre mis nuevas herramientas comerciales:</em>
+                        <ul>
+                            <li>"¿Qué sugerencias de optimización de precios tenemos para liquidar stock?"</li>
+                            <li>"Simula una campaña de marketing de Sneakers con 40% de incremento y dime qué comprar"</li>
+                            <li>"Genera una orden de compra para SAN-001 con 120 unidades y BOO-002 con 80 unidades"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Escribe tu consulta sobre el inventario..." autocomplete="off">
+                <button id="chat-send-btn" class="send-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <p>&copy; 2026 Price Shoes S.A. | Equipo de Analítica Predictiva & Google Cloud Partner</p>
+        </footer>
+    </div>
+
+    <!-- Main JavaScript Logic -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

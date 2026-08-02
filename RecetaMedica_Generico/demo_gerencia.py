@@ -35,9 +35,11 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
+from logica.firebase_auth import inicializar_base_de_datos, registrar_usuario, autenticar_usuario, validar_sesion
+
 async def verify_session(session_token: str = Cookie(None)):
     # TODO(security): Use a cryptographically secure session ID storage in production
-    if session_token != "admin_session_token":
+    if not session_token or not validar_sesion(session_token):
         raise HTTPException(status_code=401, detail="No autorizado")
     return True
 
@@ -49,6 +51,10 @@ def load_template(filename: str) -> str:
 
 
 app = FastAPI(title="Farmacias Arrocha - Demostración Ejecutiva de IA para Gerencia")
+
+@app.on_event("startup")
+def startup_event():
+    inicializar_base_de_datos()
 
 # Esquemas Pydantic avanzados para la demostración de Gerencia
 class DatosPaciente(BaseModel):
@@ -77,22 +83,32 @@ class ExtraccionDemoGerencia(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def home_gerencia(request: Request):
-    if request.cookies.get("session_token") == "admin_session_token":
+    session_token = request.cookies.get("session_token")
+    if session_token and validar_sesion(session_token):
         return HTMLResponse(content=load_template("demo_gerencia.html"))
     return HTMLResponse(content=load_template("login.html"))
 
 @app.post("/api/login")
 async def api_login(response: Response, username: str = Form(...), password: str = Form(...)):
-    if username == "admin" and password == "admin":
+    if autenticar_usuario(username, password):
+        session_val = username.strip().lower()
         response.set_cookie(
             key="session_token",
-            value="admin_session_token",
+            value=session_val,
             httponly=True,
             samesite="lax",
             max_age=2592000 # 30 días de persistencia
         )
         return {"status": "success", "message": "Inicio de sesión exitoso"}
     return JSONResponse(status_code=401, content={"status": "error", "message": "Usuario o contraseña incorrectos"})
+
+@app.post("/api/register")
+async def api_register(username: str = Form(...), password: str = Form(...)):
+    if len(password) < 6:
+        return JSONResponse(status_code=400, content={"status": "error", "message": "La contraseña debe tener al menos 6 caracteres."})
+    if registrar_usuario(username, password):
+        return {"status": "success", "message": "Registro completado con éxito. Ahora puede iniciar sesión."}
+    return JSONResponse(status_code=400, content={"status": "error", "message": "El usuario ya existe o no pudo ser registrado."})
 
 @app.post("/api/logout")
 async def api_logout(response: Response):

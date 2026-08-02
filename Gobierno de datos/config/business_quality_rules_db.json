@@ -1,0 +1,127 @@
+{
+  "rules": [
+    {
+      "rule_id": "rule-sales-volume-anomaly",
+      "name": "Detección de Variación Anormal en Volumen de Ventas (MySQL)",
+      "category": "Regla de Negocio / Anomalías",
+      "description": "Compara el volumen transaccional diario contra el baseline comercial. Alerta si la desviación supera el umbral dinámico configurado.",
+      "target_table": "mysql:bdcomercial.ventas / resumen_comercial_consolidado",
+      "metric_type": "PERCENT_DEVIATION",
+      "current_threshold_percent": 15.0,
+      "status": "ACTIVE",
+      "severity": "Crítica",
+      "auto_alert": true
+    },
+    {
+      "rule_id": "rule-financial-reconciliation",
+      "name": "Conciliación Financiera de Totales y Subtotales (MySQL)",
+      "category": "Integridad Financiera",
+      "description": "Valida que la suma de subtotales más impuestos coincida exactamente con el total de venta registrado en MySQL (discrepancia máxima = $0.00).",
+      "target_table": "mysql:bdcomercial.resumen_comercial_consolidado",
+      "metric_type": "TOLERANCE_AMOUNT_USD",
+      "current_threshold_amount": 0.05,
+      "status": "ACTIVE",
+      "severity": "Crítica",
+      "auto_alert": true
+    },
+    {
+      "rule_id": "rule-operational-freshness-sla",
+      "name": "SLA de Frescura de Replicación MySQL Aiven",
+      "category": "SLA de Disponibilidad",
+      "description": "Garantiza que la sincronización del clúster Aiven MySQL en el puerto 10283 no supere las N horas de antigüedad.",
+      "target_table": "mysql:bdcomercial.detalles_ventas / clientes",
+      "metric_type": "MAX_HOURS_DELAY",
+      "current_threshold_hours": 4.0,
+      "status": "ACTIVE",
+      "severity": "Alta",
+      "auto_alert": true
+    }
+  ],
+  "last_evaluation": {
+    "evaluated_at": "2026-07-31 17:57 UTC",
+    "total_rules_evaluated": 3,
+    "passed_rules_count": 1,
+    "failed_rules_count": 2,
+    "rules_evaluation": [
+      {
+        "rule_id": "rule-sales-volume-anomaly",
+        "name": "Detección de Variación Anormal en Volumen de Ventas (MySQL)",
+        "status": "FAILED",
+        "current_value": "91,250 transacciones (-27.0%)",
+        "baseline_value": "125,000 transacciones",
+        "threshold_applied": "Máxima variación permitida: ±15.0%",
+        "severity": "Crítica",
+        "details": "Se detectó una caída anormal del 27.0% en el volumen de ventas, superando el umbral permitido del 15.0%."
+      },
+      {
+        "rule_id": "rule-financial-reconciliation",
+        "name": "Conciliación Financiera de Totales y Subtotales (MySQL)",
+        "status": "FAILED",
+        "current_value": "2 facturas con discrepancia",
+        "baseline_value": "0 facturas con discrepancia (100% conciliado)",
+        "threshold_applied": "Tolerancia máxima por factura: $0.05 USD",
+        "severity": "Crítica",
+        "details": "Se identificaron 2 facturas donde la suma de líneas no cuadra con el total facturado."
+      },
+      {
+        "rule_id": "rule-operational-freshness-sla",
+        "name": "SLA de Frescura de Replicación MySQL Aiven",
+        "status": "PASSED",
+        "current_value": "0.8 horas (48 mins)",
+        "baseline_value": "< 4.0 horas",
+        "threshold_applied": "SLA Máximo: 4.0 horas",
+        "severity": "Alta",
+        "details": "El flujo de datos está dentro del SLA de frescura garantizado."
+      }
+    ],
+    "drill_down_failures": [
+      {
+        "rule_id": "rule-sales-volume-anomaly",
+        "rule_name": "Detección de Variación Anormal en Volumen de Ventas (MySQL)",
+        "failed_entity": "Canal Ecommerce Móvil (LatAm)",
+        "sample_records": [
+          {
+            "timestamp": "2026-07-31 00:15 UTC",
+            "region": "México",
+            "expected_events": 4500,
+            "actual_events": 1200,
+            "drop_pct": "-73.3%",
+            "root_cause": "Timeout en webhook de pasarela de pago"
+          },
+          {
+            "timestamp": "2026-07-31 00:30 UTC",
+            "region": "Colombia",
+            "expected_events": 3800,
+            "actual_events": 1950,
+            "drop_pct": "-48.6%",
+            "root_cause": "Filtro de fraude bloqueando transacciones válidas"
+          }
+        ],
+        "suggested_remediation": "Revisar logs del servicio de ingestión Pub/Sub y validar webhook de pasarela de pagos."
+      },
+      {
+        "rule_id": "rule-financial-reconciliation",
+        "rule_name": "Conciliación Financiera de Totales y Subtotales (MySQL)",
+        "failed_entity": "Dataset finanzas.facturacion_master",
+        "sample_records": [
+          {
+            "invoice_id": "INV-2026-89412",
+            "header_total": 12450.0,
+            "items_sum_plus_tax": 12420.0,
+            "discrepancy": "$30.00 USD",
+            "reason": "Descuento de cupón no imputado en líneas"
+          },
+          {
+            "invoice_id": "INV-2026-90118",
+            "header_total": 450.5,
+            "items_sum_plus_tax": 448.5,
+            "discrepancy": "$2.00 USD",
+            "reason": "Error de redondeo en tasa de impuesto municipal"
+          }
+        ],
+        "suggested_remediation": "Ajustar pipeline de facturación en BigQuery para aplicar redondeo bancario estándar y re-procesar facturas afectadas."
+      }
+    ],
+    "overall_status": "ALERTA_REGLAS_NEGOCIO"
+  }
+}

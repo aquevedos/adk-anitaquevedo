@@ -1,0 +1,20 @@
+# Google OIDC authService fragment.
+#
+# Prepended to the composed tools.yaml by the deploy script ONLY when at
+# least one enabled source has client_auth_mode != service_account (i.e. is
+# using end_user or hybrid delegation). When all sources are service_account,
+# this fragment is not included.
+#
+# Sources opting into end-user delegation should set:
+#   useClientOAuth: "X-Goog-User-Authorization"
+# and reference this authService on tools that require user auth:
+#   authRequired: [google-auth]
+
+kind: authService
+name: google-auth
+type: google
+# clientId is left blank: with useClientOAuth + the X-Goog-User-Authorization
+# header pattern, the toolbox treats the forwarded user token as opaque and
+# delegates verification to the downstream Google API. Set clientId here only
+# if you also want toolbox to verify the token's audience claim.
+clientId: ${GOOGLE_AUTH_CLIENT_ID:}

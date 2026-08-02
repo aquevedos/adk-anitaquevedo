@@ -1,0 +1,53 @@
+# BigQuery source — introspection tools ONLY (no SQL execution).
+#
+# Why this is split out and not enabled by default:
+#   The default manifest (manifest.yaml) ships with Dataplex enabled on the
+#   agent side, in which case `dataplex_search` provides table discovery and
+#   this source is redundant. When the agent is deployed with
+#   DATAPLEX_ENABLED=false, the LLM loses its catalog-based discovery path and
+#   needs another way to find tables before calling `call_bigquery_ca` (which
+#   requires explicit table references for CA's `datasource_references`). This
+#   source provides that discovery surface.
+#
+# Why no `bigquery-execute-sql`:
+#   SQL execution against BigQuery is owned by Conversational Analytics
+#   (`call_bigquery_ca` → geminidataanalytics API). CA is an analytical layer
+#   that does NL→SQL→execute→insights in one call and accepts the user's OAuth
+#   token for delegation. Adding `bigquery-execute-sql` here would give the
+#   LLM a lower-level alternative that bypasses CA's value-add, confusing tool
+#   selection. Discovery (list/get-info) is the only thing CA can't do for us.
+#
+# Governance note: `useClientOAuth` is implemented on the BigQuery source
+# upstream, so `client_auth_mode: end_user` is honored. Once ADK populates
+# ToolContext.auth with the end user's identity (and `get_end_user_token()`
+# returns a real token), these calls will execute as the user.
+
+kind: source
+name: bigquery-source
+type: bigquery
+project: ${PROJECT_ID}
+---
+kind: tool
+name: bigquery_list_datasets
+type: bigquery-list-dataset-ids
+source: bigquery-source
+description: List BigQuery dataset IDs in the project. Use this first when you need to find a table and don't know which dataset it lives in.
+---
+kind: tool
+name: bigquery_list_tables
+type: bigquery-list-table-ids
+source: bigquery-source
+description: List table IDs within a given BigQuery dataset. Use after `bigquery_list_datasets` to enumerate candidate tables.
+---
+kind: tool
+name: bigquery_get_table_info
+type: bigquery-get-table-info
+source: bigquery-source
+description: Fetch the schema (columns, types, descriptions) and metadata for a BigQuery table. Use to confirm a candidate table is what you need before passing it to `call_bigquery_ca`.
+---
+kind: toolset
+name: bigquery
+tools:
+  - bigquery_list_datasets
+  - bigquery_list_tables
+  - bigquery_get_table_info

@@ -1,0 +1,79 @@
+# Configuración del Agente de Gobierno de Datos Híbrido y Multi-Cloud
+platform:
+  name: "Agentic Data Governance Hub"
+  version: "2.5.0"
+  environment: "Multi-Cloud Production"
+  default_cloud: "GCP"
+
+clouds_connected:
+  - id: "gcp"
+    name: "Google Cloud Platform"
+    services: ["Dataplex Knowledge Catalog", "BigQuery", "Cloud DLP (SDP)", "Cloud Storage", "Dataplex Quality"]
+    status: "online"
+    latency_ms: 18
+  - id: "aws"
+    name: "Amazon Web Services"
+    services: ["Amazon Redshift", "Amazon S3", "AWS Glue Data Catalog"]
+    status: "online"
+    latency_ms: 42
+  - id: "azure"
+    name: "Microsoft Azure"
+    services: ["Azure Synapse Analytics", "Azure Data Lake Storage Gen2", "Microsoft Purview"]
+    status: "online"
+    latency_ms: 55
+  - id: "onprem"
+    name: "On-Premises & Hybrid"
+    services: ["PostgreSQL Cluster", "Oracle Enterprise Database", "Apache Kafka"]
+    status: "online"
+    latency_ms: 12
+  - id: "saas"
+    name: "SaaS Enterprise Data"
+    services: ["Salesforce Data Cloud", "SAP S/4HANA"]
+    status: "online"
+    latency_ms: 65
+
+governance_rules:
+  min_quality_score_threshold: 90.0
+  auto_masking_enabled: true
+  dlp_auto_tagging: true
+  pii_categories:
+    - "EMAIL_ADDRESS"
+    - "PHONE_NUMBER"
+    - "PERSON_NAME"
+    - "CREDIT_CARD_NUMBER"
+    - "TAX_ID_RFC_SSN"
+    - "IBAN_BANK_ACCOUNT"
+    - "IP_ADDRESS"
+    - "LOCATION_GEO"
+
+dominios_negocio:
+  - id: "clientes"
+    nombre: "Clientes y Fidelización"
+    steward: "María Fernández"
+    email: "maria.fernandez@empresa.com"
+    criticidad: "Alta"
+    total_assets: 18
+  - id: "finanzas"
+    nombre: "Finanzas y Facturación"
+    steward: "Carlos Mendoza"
+    email: "carlos.mendoza@empresa.com"
+    criticidad: "Crítica"
+    total_assets: 24
+  - id: "operaciones"
+    nombre: "Operaciones y Logística"
+    steward: "Valeria Ramos"
+    email: "valeria.ramos@empresa.com"
+    criticidad: "Media"
+    total_assets: 14
+  - id: "ventas"
+    nombre: "Ventas y Omnicanalidad"
+    steward: "Andrés Silva"
+    email: "andres.silva@empresa.com"
+    criticidad: "Alta"
+    total_assets: 22
+  - id: "ia_rag"
+    nombre: "IA & Modelos RAG"
+    steward: "Dr. Roberto Solís"
+    email: "roberto.solis@empresa.com"
+    criticidad: "Crítica"
+    total_assets: 11

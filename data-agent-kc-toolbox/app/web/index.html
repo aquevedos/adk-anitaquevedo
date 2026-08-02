@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMI — Plataforma de Gobierno de Datos & Agente Inteligente</title>
+  <meta name="description" content="Centro de control y agente especialista en gobierno de datos, calidad, linaje y analítica orquestada para Corporación Multi Inversiones (CMI).">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">CMI</div>
+      <div class="brand-text">
+        <h2>Data Governance</h2>
+        <span>Control Center</span>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <button class="nav-btn active" data-tab="dashboard" id="nav-dashboard">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+          Dashboard & Salud
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" data-tab="chat" id="nav-chat">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+          Agente Especialista CMI
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" data-tab="admin" id="nav-admin">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+          Capa de Administración
+        </button>
+      </li>
+      <li>
+        <button class="nav-btn" data-tab="catalog" id="nav-catalog">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+          Catálogo & Linaje
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span>Dataplex & Gemini Activo</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= Main Container ================= -->
+  <main class="main-wrapper">
+    
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-title">
+        <h1>Gobierno de Datos CMI</h1>
+        <p>Corporación Multi Inversiones — Supervisión, Calidad y Analítica Orquestada</p>
+      </div>
+
+      <div class="bu-selector-wrapper">
+        <label for="globalBuSelect">Unidad de Negocio:</label>
+        <select id="globalBuSelect" class="bu-select">
+          <option value="cmi_alimentos">CMI Alimentos</option>
+          <option value="cmi_capital">CMI Capital</option>
+          <option value="cmi_corporativo">CMI Servicios Compartidos</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- ================= Tab 1: Dashboard ================= -->
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="metrics-grid">
+        <div class="metric-card green">
+          <div class="metric-header">
+            <span class="metric-label">Índice de Salud de Gobierno</span>
+          </div>
+          <div class="metric-value" id="healthScore">94%</div>
+          <div class="metric-sub">Excelente — Conforme a SLA CMI</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Unidades de Negocio</span>
+          </div>
+          <div class="metric-value" id="buCount">3</div>
+          <div class="metric-sub">Alimentos, Capital y Corporativo</div>
+        </div>
+
+        <div class="metric-card gold">
+          <div class="metric-header">
+            <span class="metric-label">Reglas de Calidad Activas</span>
+          </div>
+          <div class="metric-value" id="rulesCount">6</div>
+          <div class="metric-sub">Tolerancia, nulos y frescura</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Términos en Glosario Oficial</span>
+          </div>
+          <div class="metric-value" id="glossaryCount">4</div>
+          <div class="metric-sub">Estandarizados en Dataplex</div>
+        </div>
+      </div>
+
+      <div class="dashboard-layout">
+        <div class="section-box">
+          <h3>
+            <svg style="width:20px; height:20px; color:var(--primary);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Alertas Recientes de Gobierno y Calidad
+          </h3>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Dominio</th>
+                <th>Descripción de la Alerta</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="alertsTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-box">
+          <h3>
+            <svg style="width:20px; height:20px; color:var(--accent-gold);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Políticas Principales
+          </h3>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+            <li style="font-size: 13px; color: var(--text-secondary); border-left: 2px solid var(--primary); padding-left: 10px;">
+              <strong style="color:#fff;">POL-ALM-03:</strong> SLA de Devoluciones a Clientes (Máx. 8.0%)
+            </li>
+            <li style="font-size: 13px; color: var(--text-secondary); border-left: 2px solid var(--accent-gold); padding-left: 10px;">
+              <strong style="color:#fff;">POL-CORP-01:</strong> Enmascaramiento Obligatorio de PII
+            </li>
+            <li style="font-size: 13px; color: var(--text-secondary); border-left: 2px solid var(--success); padding-left: 10px;">
+              <strong style="color:#fff;">POL-CAP-01:</strong> Confidencialidad de Márgenes y Costos
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Tab 2: Chat Agent ================= -->
+    <section id="tab-chat" class="tab-content">
+      <div class="chat-container">
+        
+        <!-- Quick Prompts Bar -->
+        <div class="chat-quick-prompts">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text-secondary); align-self: center;">Sugerencias:</span>
+          <button class="quick-btn" data-prompt="¿Cuál fue el valor promedio de pedido de los clientes Premium en Q4 y qué categoría tuvo mayor gasto?">
+            🎯 Clientes Premium & AOV
+          </button>
+          <button class="quick-btn" data-prompt="Ejecuta una evaluación de salud de proveedor para Carhartt. Compara margen y tasa de devoluciones contra nuestras políticas.">
+            📊 Auditoría Proveedor Carhartt
+          </button>
+          <button class="quick-btn" data-prompt="¿Cuál es nuestro plazo de devolución para prendas de abrigo y cuál es el umbral de alerta?">
+            📋 Política de Devoluciones
+          </button>
+          <button class="quick-btn" data-prompt="¿Qué reglas de calidad y glosario aplican a las tablas de ventas en CMI Alimentos?">
+            🛡️ Reglas de Gobierno CMI
+          </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-bubble agent">
+            <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--primary); margin-bottom: 8px;">
+              <span>🛡️ Agente Especialista en Gobierno de Datos CMI</span>
+            </div>
+            ¡Hola! Soy tu <strong>Especialista en Gobierno de Datos de CMI</strong>. Estoy conectado a <strong>Dataplex Knowledge Catalog</strong>, <strong>BigQuery Conversational Analytics</strong> y los repositorios de políticas de CMI.<br><br>
+            Puedo ayudarte a auditar métricas, validar el cumplimiento de políticas de negocio, consultar tablas garantizando el linaje y calcular indicadores financieros y operativos según el glosario corporativo.
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="chat-input-wrapper">
+          <input type="text" id="chatInput" class="chat-input" placeholder="Formula una consulta de analítica o gobierno de datos para CMI...">
+          <button id="btnSend" class="btn-send">
+            <span>Enviar</span>
+            <svg style="width:16px; height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= Tab 3: Admin Configuration ================= -->
+    <section id="tab-admin" class="tab-content">
+      <div class="admin-card">
+        <h3>1. Reglas y Umbrales de Calidad de Datos (SLA CMI)</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cfgMaxNulls">Tolerancia Máxima de Nulos (%)</label>
+            <input type="number" step="0.1" id="cfgMaxNulls" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="cfgMaxReturns">Umbral Máximo de Alerta de Devoluciones (%)</label>
+            <input type="number" step="0.1" id="cfgMaxReturns" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="cfgMaxFreshness">Frescura Máxima de Datos (Horas)</label>
+            <input type="number" id="cfgMaxFreshness" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>2. Glosario Empresarial CMI (Definiciones Oficiales)</h3>
+        <div id="glossaryAdminList">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>3. Conexiones e Infraestructura GCP</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cfgProject">ID de Proyecto Google Cloud</label>
+            <input type="text" id="cfgProject" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="cfgDataset">Dataset Predeterminado de BigQuery</label>
+            <input type="text" id="cfgDataset" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="cfgBucket">Bucket de Políticas (Cloud Storage)</label>
+            <input type="text" id="cfgBucket" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="cfgEntryGroup">Grupo de Entradas Dataplex</label>
+            <input type="text" id="cfgEntryGroup" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn-save" onclick="saveConfig()">
+          <svg style="width:20px; height:20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Guardar y Aplicar Cambios
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= Tab 4: Catalog Explorer ================= -->
+    <section id="tab-catalog" class="tab-content">
+      <div class="section-box">
+        <h3>
+          <svg style="width:20px; height:20px; color:var(--primary);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+          Entradas Catalogadas en Dataplex Knowledge Catalog
+        </h3>
+        <table class="custom-table" style="margin-top: 16px;">
+          <thead>
+            <tr>
+              <th>Nombre de Recurso / URI</th>
+              <th>Categoría</th>
+              <th>Descripción y Aspectos de Gobierno</th>
+              <th>Clasificación de Seguridad</th>
+              <th>Unidad CMI</th>
+            </tr>
+          </thead>
+          <tbody id="catalogTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

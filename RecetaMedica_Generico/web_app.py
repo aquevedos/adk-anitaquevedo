@@ -31,14 +31,21 @@ from google.cloud import bigquery
 
 from logica.tools.extraction_tools import RecetaEstructurada
 from logica.limpiar_tabla import limpiar_tabla_prescripciones
+from logica.firebase_auth import inicializar_base_de_datos, registrar_usuario, autenticar_usuario, validar_sesion
 
 app = FastAPI(title="ADK Web - Extracción por Lotes de Recetas Médicas")
 
 logger = logging.getLogger(__name__)
 
+# Inicializar colección de usuarios en Firestore al iniciar la aplicación
+@app.on_event("startup")
+def startup_event():
+    inicializar_base_de_datos()
+
+
 async def verify_session(session_token: str = Cookie(None)):
     # TODO(security): Use a cryptographically secure session ID storage in production
-    if session_token != "admin_session_token":
+    if not session_token or not validar_sesion(session_token):
         raise HTTPException(status_code=401, detail="No autorizado")
     return True
 
@@ -50,23 +57,34 @@ def load_template(filename: str) -> str:
 @app.get("/", response_class=HTMLResponse)
 async def serve_home(request: Request):
     """Sirve la página de la interfaz web de usuario o la de login."""
-    if request.cookies.get("session_token") == "admin_session_token":
+    session_token = request.cookies.get("session_token")
+    if session_token and validar_sesion(session_token):
         return HTMLResponse(content=load_template("dashboard.html"))
     return HTMLResponse(content=load_template("login.html"))
 
 @app.post("/api/login")
 async def api_login(response: Response, username: str = Form(...), password: str = Form(...)):
-    """Endpoint de inicio de sesión con credenciales por defecto admin/admin."""
-    if username == "admin" and password == "admin":
+    """Endpoint de inicio de sesión verificando credenciales en Firestore."""
+    if autenticar_usuario(username, password):
+        session_val = username.strip().lower()
         response.set_cookie(
             key="session_token",
-            value="admin_session_token",
+            value=session_val,
             httponly=True,
             samesite="lax",
             max_age=2592000 # 30 días de persistencia
         )
         return {"status": "success", "message": "Inicio de sesión exitoso"}
     return JSONResponse(status_code=401, content={"status": "error", "message": "Usuario o contraseña incorrectos"})
+
+@app.post("/api/register")
+async def api_register(username: str = Form(...), password: str = Form(...)):
+    """Endpoint para registrar un nuevo usuario en Firestore."""
+    if len(password) < 6:
+        return JSONResponse(status_code=400, content={"status": "error", "message": "La contraseña debe tener al menos 6 caracteres."})
+    if registrar_usuario(username, password):
+        return {"status": "success", "message": "Registro completado con éxito. Ahora puede iniciar sesión."}
+    return JSONResponse(status_code=400, content={"status": "error", "message": "El usuario ya existe o no pudo ser registrado."})
 
 @app.post("/api/logout")
 async def api_logout(response: Response):

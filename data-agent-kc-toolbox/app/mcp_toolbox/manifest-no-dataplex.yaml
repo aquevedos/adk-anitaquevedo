@@ -1,0 +1,43 @@
+# MCP Toolbox manifest for deployments where the agent has DATAPLEX_ENABLED=false.
+#
+# When Dataplex is disabled on the agent, `dataplex_search` is dropped from the
+# tool list and the orchestration prompt switches to `INSTRUCTION_WITHOUT_DATAPLEX`.
+# Without the catalog, the agent has no way to discover BigQuery tables before
+# calling `call_bigquery_ca` (which requires explicit table references — CA's
+# `:chat` endpoint returns REFERENCES_NOT_SET when none are provided).
+#
+# This variant enables the BigQuery introspection toolset so the LLM can do its
+# own discovery: list datasets → list tables → get schema → call CA with the
+# right table references. SQL execution still goes through CA, not the toolbox.
+#
+# Usage:
+#   make deploy-mcp VARIANT=no-kc \
+#     MANIFEST=app/mcp_toolbox/manifest-no-dataplex.yaml
+#   make deploy VARIANT=no-kc DATAPLEX_ENABLED=false
+#
+# The companion `manifest.yaml` (default) leaves bigquery disabled because
+# `dataplex_search` provides discovery when Dataplex is on.
+
+sources:
+  gcs:
+    enabled: true
+    file: sources/gcs.yaml
+    iam_roles:
+      # storage.admin covers all three GCS tools: list_buckets (needs
+      # project-wide storage.buckets.list), list_objects, read_object.
+      # Narrower built-in roles either lack buckets.list at project scope
+      # (objectViewer) or only bind at bucket scope (legacyBucketReader).
+      # Swap for a custom role if you need strict least-privilege.
+      - roles/storage.admin
+    required_env: [PROJECT_ID]
+    apis: [storage.googleapis.com]
+    description: Cloud Storage access to buckets and objects
+
+  bigquery:
+    enabled: true
+    file: sources/bigquery.yaml
+    iam_roles:
+      - roles/bigquery.metadataViewer
+    required_env: [PROJECT_ID]
+    apis: [bigquery.googleapis.com]
+    description: BigQuery introspection (datasets, tables, schemas) — no SQL execution

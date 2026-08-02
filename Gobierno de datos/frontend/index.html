@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Data Governance Hub | Multi-Cloud & Hybrid</title>
+  <meta name="description" content="Plataforma de Gobierno de Datos Agéntico Multi-Cloud con Knowledge Catalog, Dataplex, Cloud DLP y 4 Perfiles Especializados">
+  
+  <!-- Google Fonts Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       VENTANA DE LOGIN (ROLE-BASED PORTAL PASTEL)
+       ========================================================================== -->
+  <div id="login-overlay" class="login-overlay" style="display: flex;">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-icon">🌐</div>
+        <h2 class="login-title">Agentic Data Governance Hub</h2>
+        <p class="login-subtitle">Selecciona tu Rol de Gobierno o ingresa con tu correo corporativo.</p>
+      </div>
+
+      <div>
+        <div class="role-selector-title">Acceso Rápido por Rol:</div>
+        <div class="roles-grid">
+          <button type="button" class="role-option-btn" data-email="cdo@empresa.com" onclick="quickSelectLoginRole('cdo@empresa.com', '123', 'CDO')">
+            <span class="role-avatar">👔</span>
+            <div>
+              <div class="role-name">El Estratega</div>
+              <div class="role-desc">CDO / Valor & ROI</div>
+            </div>
+          </button>
+
+          <button type="button" class="role-option-btn" data-email="governance@empresa.com" onclick="quickSelectLoginRole('governance@empresa.com', '123', 'Agile Lead')">
+            <span class="role-avatar">📋</span>
+            <div>
+              <div class="role-name">El Gestor</div>
+              <div class="role-desc">Agile Lead / RACI</div>
+            </div>
+          </button>
+
+          <button type="button" class="role-option-btn selected" data-email="steward@empresa.com" onclick="quickSelectLoginRole('steward@empresa.com', '123', 'Data Steward')">
+            <span class="role-avatar">🛡️</span>
+            <div>
+              <div class="role-name">El Guardián</div>
+              <div class="role-desc">Steward / Calidad / DLP</div>
+            </div>
+          </button>
+
+          <button type="button" class="role-option-btn" data-email="architect@empresa.com" onclick="quickSelectLoginRole('architect@empresa.com', '123', 'Data Architect')">
+            <span class="role-avatar">⚙️</span>
+            <div>
+              <div class="role-name">El Arquitecto</div>
+              <div class="role-desc">Architect / Linaje / SQL</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <form id="login-form" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Correo Corporativo:</label>
+          <input type="email" id="login-email" class="form-input" value="steward@empresa.com" required placeholder="tu.correo@empresa.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Contraseña:</label>
+          <input type="password" id="login-password" class="form-input" value="123" required placeholder="••••••••">
+        </div>
+
+        <div style="font-size: 0.75rem; color: var(--text-muted); background: var(--bg-app); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">
+          💡 <em>Contraseña demo para todos los roles: <code>123</code></em>
+        </div>
+
+        <button type="submit" class="btn-login">
+          <span>Ingresar a mi Espacio de Trabajo</span>
+          <span>➔</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-icon">🌐</div>
+      <div>
+        <h1 class="brand-name">Agentic Data Governance Hub</h1>
+        <p class="brand-sub">Knowledge Catalog • Dataplex • Cloud DLP • Multi-Cloud & Hybrid</p>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div style="display: flex; gap: 0.35rem;">
+        <span class="stat-metric-badge badge-blue">● GCP BigQuery</span>
+        <span class="stat-metric-badge badge-amber">● MySQL Online</span>
+        <span class="stat-metric-badge badge-blue">● Azure SQL Server</span>
+      </div>
+
+      <!-- User Identity Card -->
+      <div class="user-identity-card" id="header-user-card" style="display: none;">
+        <span class="user-avatar-small" id="header-user-avatar">🛡️</span>
+        <div>
+          <div class="user-name-small" id="header-user-name">Lucía Morales</div>
+          <span class="user-role-badge badge-blue" id="header-user-role">Data Steward</span>
+        </div>
+        <button class="btn-logout" onclick="logoutUser()" title="Cerrar Sesión">🚪 Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Role Workspace Banner -->
+  <section class="role-workspace-banner">
+    <div class="role-banner-left">
+      <div class="role-banner-avatar" id="role-banner-avatar">🛡️</div>
+      <div>
+        <h2 class="role-banner-title" id="role-banner-title">Espacio de Trabajo</h2>
+        <p class="role-banner-mission" id="role-banner-mission">🎯 Misión del Rol de Gobierno.</p>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <button class="btn-secondary" onclick="logoutUser()" style="font-size: 0.8rem;">👥 Cambiar de Rol</button>
+    </div>
+  </section>
+
+  <!-- Workspace Container -->
+  <main class="workspace-container">
+    <!-- Role-Tailored Navigation Tabs Bar -->
+    <nav class="nav-tabs-bar" id="nav-tabs-bar">
+      <!-- Tabs injected strictly according to authenticated role by auth.js -->
+    </nav>
+
+    <!-- 1. CHAT WORKSPACE PANE (ALL ROLES) -->
+    <section id="pane-chat" class="tab-content-pane active">
+      <div class="chat-workspace-grid">
+        <div class="chat-box-card">
+          <div class="chat-box-header">
+            <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-main);">Asistente Inteligente de Gobierno</div>
+            <span class="stat-metric-badge badge-emerald">● Motor Agéntico Activo</span>
+          </div>
+
+          <div class="chat-history" id="chat-history-container">
+            <!-- Messages dynamically injected -->
+          </div>
+
+          <div class="chat-input-footer">
+            <div class="quick-prompts-scroller" id="quick-prompts-container">
+              <!-- Prompts injected by chat.js according to role -->
+            </div>
+
+            <div class="input-container">
+              <input type="text" id="chat-input" class="form-input" style="flex: 1;" placeholder="Pregunta sobre calidad, linaje, PII, ROI o solicita acciones...">
+              <button id="chat-send-btn" class="btn-send">
+                <span>Consultar 🚀</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Sidebar -->
+        <aside class="chat-sidebar-card">
+          <div>
+            <div class="sidebar-section-title">Reglas de Gobernanza</div>
+            <div style="background: var(--pastel-amber-bg); border: 1px solid var(--pastel-amber-border); padding: 0.75rem; border-radius: var(--radius-md);">
+              <strong style="color: var(--pastel-amber-text); font-size: 0.82rem;">🔒 Regla de Oro (Zero PII Exposure)</strong>
+              <p style="color: var(--text-main); font-size: 0.75rem; margin-top: 0.2rem;">NUNCA se exponen datos reales sensibles. Solo se opera con metadatos, tags DLP y enmascaramiento dinámico.</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="sidebar-section-title">Estructura en 6 Pasos</div>
+            <ol style="font-size: 0.76rem; color: var(--text-muted); padding-left: 1.1rem; line-height: 1.6;">
+              <li>📌 Resumen Ejecutivo</li>
+              <li>📍 Ubicación Multi-Cloud</li>
+              <li>🔒 Sensibilidad (DLP)</li>
+              <li>🩺 Calidad (Dataplex)</li>
+              <li>🔗 Linaje Rápido</li>
+              <li>💡 Siguiente Paso / SQL / RACI</li>
+            </ol>
+          </div>
+
+          <div>
+            <div class="sidebar-section-title">Dominios Activos</div>
+            <div class="domains-list-mini" id="domains-list-mini">
+              <!-- Rendered by stewards.js -->
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 2. CDO ROI & BUSINESS VALUE PANE (PERFIL 1: ESTRATEGA EJECUTIVO) -->
+    <section id="pane-cdo-roi" class="tab-content-pane">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.2rem; font-weight: 700;">💼 Tablero de Valor, ROI & Impacto Financiero de Datos</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">Vista exclusiva para el <strong>CDO y la Alta Dirección</strong> para monetizar y proteger los activos de la empresa.</p>
+      </div>
+
+      <div class="card-grid" style="margin-bottom: 1.5rem;">
+        <div class="pastel-card" style="border-top: 3px solid var(--pastel-blue-accent);">
+          <span class="stat-metric-badge badge-blue">RETORNO DE INVERSIÓN (ROI)</span>
+          <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">340% ROI</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Ahorro estimado en costos de inacción y reducción de retrabajo de datos.</p>
+        </div>
+
+        <div class="pastel-card" style="border-top: 3px solid var(--pastel-emerald-accent);">
+          <span class="stat-metric-badge badge-emerald">EFICIENCIA DE CALIDAD</span>
+          <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">$185,000 USD</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Pérdidas prevenidas al asegurar calidad >95% en tablas de facturación y clientes.</p>
+        </div>
+
+        <div class="pastel-card" style="border-top: 3px solid var(--pastel-rose-accent);">
+          <span class="stat-metric-badge badge-rose">RIESGO DE MULTAS MITIGADO</span>
+          <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">100% Blindado</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Protección de PII con Cloud DLP y Dynamic Data Masking en BigQuery.</p>
+        </div>
+      </div>
+
+      <div class="pastel-card">
+        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">Dominios de Negocio & Asignación Estratégica</h3>
+        <div class="domains-grid" id="cdo-domains-grid">
+          <!-- Rendered by stewards.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MATURITY & SPRINTS PANE (PERFIL 2: GESTOR DEL PROGRAMA) -->
+    <section id="pane-maturity" class="tab-content-pane">
+      <div class="pastel-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">📋 Diagnóstico de Madurez de Gobierno (DMM) & Roadmap Ágil</h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Evalúa la madurez de la empresa y genera automáticamente el plan de trabajo por Sprints.</p>
+          </div>
+          <button class="btn-primary" onclick="runMaturityAssessment()">🚀 Evaluar Madurez & Generar Roadmap</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+          <div>
+            <label style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.3rem;">1. Inventario & Catálogo:</label>
+            <select id="mat-q1" class="form-input" style="width: 100%; font-size: 0.82rem;">
+              <option value="1">1 - Sin inventario formal</option>
+              <option value="2">2 - Inventario en Excel</option>
+              <option value="3" selected>3 - Knowledge Catalog conectado</option>
+              <option value="4">4 - Catálogo activo automatizado</option>
+              <option value="5">5 - Data Mesh federado</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.3rem;">2. Calidad de Datos (Dataplex):</label>
+            <select id="mat-q2" class="form-input" style="width: 100%; font-size: 0.82rem;">
+              <option value="1">1 - Sin validación</option>
+              <option value="2">2 - Validaciones manuales</option>
+              <option value="3" selected>3 - Reglas automáticas en Dataplex</option>
+              <option value="4">4 - Alertas y auto-remediación</option>
+              <option value="5">5 - SLAs garantizados con IA</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.3rem;">3. Protección de PII (Cloud DLP):</label>
+            <select id="mat-q3" class="form-input" style="width: 100%; font-size: 0.82rem;">
+              <option value="1">1 - PII expuesta sin control</option>
+              <option value="2" selected>2 - Escaneo ocasional</option>
+              <option value="3">3 - Dynamic Masking en BigQuery</option>
+              <option value="4">4 - Clasificación continua DLP</option>
+              <option value="5">5 - Cero confianza / Homomórfico</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.3rem;">4. Adopción de IA & RAG:</label>
+            <select id="mat-q4" class="form-input" style="width: 100%; font-size: 0.82rem;">
+              <option value="1">1 - No se utiliza IA</option>
+              <option value="2">2 - Pruebas no gobernadas</option>
+              <option value="3" selected>3 - Datasets certificados para RAG</option>
+              <option value="4">4 - Agentes autónomos gobernados</option>
+              <option value="5">5 - Soberanía total de modelos</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="maturity-results-container">
+          <!-- Rendered on button click -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. RACI MATRIX & COMMITTEES PANE (PERFIL 2: GESTOR DEL PROGRAMA) -->
+    <section id="pane-raci" class="tab-content-pane">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.2rem; font-weight: 700;">👥 Estructura Organizativa, Matriz RACI & Comités de Gobierno</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Definición formal de responsabilidades (Responsible, Accountable, Consulted, Informed).</p>
+      </div>
+
+      <div class="pastel-card">
+        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;">Matriz RACI Oficial por Dominio</h3>
+        <div style="overflow-x: auto;">
+          <table class="table-clean">
+            <thead>
+              <tr>
+                <th>Proceso / Iniciativa de Gobierno</th>
+                <th>CDO (Estratega)</th>
+                <th>Agile Lead (Gestor)</th>
+                <th>Data Steward (Guardián)</th>
+                <th>Data Architect (Ingeniero)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Definición de Políticas y Estrategia</strong></td>
+                <td><span class="stat-metric-badge badge-blue">Accountable (A)</span></td>
+                <td><span class="stat-metric-badge badge-purple">Responsible (R)</span></td>
+                <td><span class="stat-metric-badge badge-emerald">Consulted (C)</span></td>
+                <td><span class="stat-metric-badge badge-amber">Informed (I)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Glosario de Negocio & Calidad Dataplex</strong></td>
+                <td><span class="stat-metric-badge badge-blue">Informed (I)</span></td>
+                <td><span class="stat-metric-badge badge-purple">Consulted (C)</span></td>
+                <td><span class="stat-metric-badge badge-emerald">Accountable (A)</span></td>
+                <td><span class="stat-metric-badge badge-amber">Responsible (R)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Protección DLP & Dynamic Data Masking</strong></td>
+                <td><span class="stat-metric-badge badge-blue">Consulted (C)</span></td>
+                <td><span class="stat-metric-badge badge-purple">Informed (I)</span></td>
+                <td><span class="stat-metric-badge badge-emerald">Responsible (R)</span></td>
+                <td><span class="stat-metric-badge badge-amber">Accountable (A)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Certificación de Datasets para Modelos RAG</strong></td>
+                <td><span class="stat-metric-badge badge-blue">Accountable (A)</span></td>
+                <td><span class="stat-metric-badge badge-purple">Responsible (R)</span></td>
+                <td><span class="stat-metric-badge badge-emerald">Responsible (R)</span></td>
+                <td><span class="stat-metric-badge badge-amber">Consulted (C)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. DATAPLEX QUALITY & ADVANCED BUSINESS RULES PANE (PERFIL 3: GUARDIÁN DEL DATO) -->
+    <section id="pane-quality" class="tab-content-pane">
+      <div style="display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem;">
+        <div>
+          <div style="margin-bottom: 1.25rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <label for="quality-asset-select" style="font-size: 0.85rem; font-weight: 600;">Seleccionar Tabla:</label>
+            <select id="quality-asset-select" onchange="runQualityScanForAsset(this.value)" class="form-input" style="min-width: 300px;">
+              <!-- Injected by JS -->
+            </select>
+          </div>
+
+          <div id="quality-results-container">
+            <!-- Quality Results by quality.js -->
+          </div>
+        </div>
+
+        <aside class="pastel-card">
+          <div class="sidebar-section-title">Alertas Dataplex (<90%)</div>
+          <div id="quality-alerts-container">
+            <!-- Alerts by quality.js -->
+          </div>
+        </aside>
+      </div>
+
+      <!-- SECCIÓN: REGLAS DE NEGOCIO AVANZADAS & DRILL-DOWN (ANOMALÍAS EN VENTAS) -->
+      <div class="pastel-card" style="margin-top: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700;">📊 Reglas de Calidad de Negocio Avanzadas (Drill-Down & Umbrales Dinámicos)</h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted);">
+              Detección de variaciones anormales en volumen de ventas, conciliación financiera y SLAs con umbrales configurables en tiempo real.
+            </p>
+          </div>
+          <button class="btn-primary" onclick="triggerEvaluateBusinessRules()">🚀 Evaluar Reglas de Negocio</button>
+        </div>
+
+        <div style="overflow-x: auto; margin-top: 0.75rem;">
+          <table class="table-clean">
+            <thead>
+              <tr>
+                <th>Regla de Negocio</th>
+                <th>Categoría</th>
+                <th>Umbral Dinámico Configurable</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="business-rules-list-container">
+              <!-- Rendered by quality.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="business-rules-results-container">
+          <!-- Drill-down results rendered on evaluation -->
+        </div>
+      </div>
+
+      <!-- Live Dataplex Scans from GCP Console -->
+      <div class="pastel-card" style="margin-top: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700;">Escaneos Registrados en Google Cloud Dataplex (Console)</h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted);">Data Profile & Quality Scans en <code>projects/agentspace-demos-466121/locations/us-central1</code>.</p>
+          </div>
+          <button class="btn-secondary" onclick="loadRealDataplexConsoleScans()">🔄 Refrescar desde GCP</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="table-clean">
+            <thead>
+              <tr>
+                <th>Nombre del Escaneo en GCP</th>
+                <th>Tipo</th>
+                <th>Tabla BigQuery</th>
+                <th>Estado en GCP</th>
+              </tr>
+            </thead>
+            <tbody id="real-dataplex-scans-table">
+              <!-- Injected by quality.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. SENSITIVE DATA PROTECTION (CLOUD DLP / SDP SUITE MULTI-ROL) -->
+    <section id="pane-dlp" class="tab-content-pane">
+      <div style="text-align: center; color: var(--text-muted); padding: 3rem;">
+        <em>Cargando suite integral de Sensitive Data Protection (Discovery, Inspección, Risk Analysis & Políticas)...</em>
+      </div>
+    </section>
+
+    <!-- 7. STEWARDS & GLOSSARY PANE (PERFIL 3: GUARDIÁN DEL DATO) -->
+    <section id="pane-stewards" class="tab-content-pane">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.2rem; font-weight: 700;">Certificación de Datasets para IA Generativa & RAG</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Garantiza que ningún modelo fundacional o agente acceda a datos sin enmascarar o no certificados.</p>
+      </div>
+
+      <div class="card-grid" id="ai-readiness-grid">
+        <!-- AI Readiness cards by stewards.js -->
+      </div>
+    </section>
+
+    <!-- 8. LINEAGE PANE (PERFIL 4: ARQUITECTO E INGENIERO) -->
+    <section id="pane-lineage" class="tab-content-pane">
+      <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <label for="lineage-asset-select" style="font-size: 0.85rem; font-weight: 600;">Seleccionar Activo:</label>
+          <select id="lineage-asset-select" onchange="renderLineageForAsset(this.value)" class="form-input" style="min-width: 300px;">
+            <!-- Options injected by JS -->
+          </select>
+        </div>
+        <button class="btn-secondary" onclick="triggerSimulateSchemaChange()">⚡ Simular Cambio de Esquema</button>
+      </div>
+
+      <div class="pastel-card" id="lineage-graph-container">
+        <!-- SVG Lineage Injected by lineage.js -->
+      </div>
+    </section>
+
+    <!-- 9. CONNECTORS & EXTERNAL DATABASE DISCOVERY WIZARD PANE (PERFIL 4: ARQUITECTO) -->
+    <section id="pane-connectors" class="tab-content-pane">
+      <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.2rem; font-weight: 700;">🔌 Conectores & Descubrimiento Automatizado Multi-Cloud</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">
+            Conexión en vivo a bases de datos externas (MySQL Online / FreeMySQLDatabase, Azure SQL, PostgreSQL), profiling e indexación en Knowledge Catalog.
+          </p>
+        </div>
+        <button class="btn-secondary" onclick="loadConnectorsStatus()">🔄 Refrescar Conectores</button>
+      </div>
+
+      <!-- EXTERNAL DATABASE CONNECTION & DISCOVERY WIZARD -->
+      <div class="pastel-card" style="margin-bottom: 1.5rem; border-top: 3px solid var(--pastel-blue-accent);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 700;">🌐 Asistente de Conexión & Indexación de BD Externa (MySQL / Aiven Cloud / Azure)</h3>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="btn-secondary" style="font-size: 0.75rem;" onclick="fillMySQLPreset('freesql')">⚡ Cargar Preset MySQL Aiven</button>
+            <button class="btn-secondary" style="font-size: 0.75rem;" onclick="fillMySQLPreset('azuresql')">⚡ Cargar Preset Azure SQL</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 0.9rem;">
+          <div>
+            <label class="form-label" for="ext-host">Host / Servidor:</label>
+            <input type="text" id="ext-host" class="form-input" value="mysql-1c645071-google-beed.j.aivencloud.com" placeholder="ej. mysql-1c645071-google-beed.j.aivencloud.com">
+          </div>
+          <div>
+            <label class="form-label" for="ext-port">Puerto:</label>
+            <input type="number" id="ext-port" class="form-input" value="10283" placeholder="10283">
+          </div>
+          <div>
+            <label class="form-label" for="ext-db">Base de Datos:</label>
+            <input type="text" id="ext-db" class="form-input" value="bdcomercial" placeholder="bdcomercial">
+          </div>
+          <div>
+            <label class="form-label" for="ext-user">Usuario:</label>
+            <input type="text" id="ext-user" class="form-input" value="avnadmin" placeholder="avnadmin">
+          </div>
+          <div>
+            <label class="form-label" for="ext-pass">Contraseña:</label>
+            <input type="password" id="ext-pass" class="form-input" value="" placeholder="••••••••">
+          </div>
+        </div>
+
+        <!-- TABLA ESPECÍFICA FILTER & CSV UPLOAD -->
+        <div style="background: var(--bg-app); border: 1px solid var(--border-light); padding: 0.9rem; border-radius: var(--radius-md); margin-bottom: 1rem;">
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">
+            🎯 Selección Específica de Tablas a Gobernar (Filtro por Lista o CSV):
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 280px; gap: 0.75rem;">
+            <div>
+              <label class="form-label" for="ext-tables">Lista de Tablas Separadas por Coma (o vacío para todas):</label>
+              <input type="text" id="ext-tables" class="form-input" style="width: 100%;" value="clientes, ventas, productos, detalles_ventas, resumen_comercial_consolidado, vendedores" placeholder="clientes, ventas, productos (o vacío para todas)">
+            </div>
+            <div>
+              <label class="form-label" for="ext-csv-file">O Cargar Archivo CSV con Tablas:</label>
+              <input type="file" id="ext-csv-file" accept=".csv,.txt" class="form-input" style="width: 100%; font-size: 0.75rem; padding: 0.35rem;">
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button class="btn-secondary" onclick="testExternalConnection()">🔌 Probar Conexión en Vivo</button>
+          <button class="btn-primary" onclick="triggerExternalDiscovery()">🚀 Ejecutar Descubrimiento Automatizado, Linaje & Profiling</button>
+        </div>
+
+        <div id="discovery-results-container">
+          <!-- Rendered by connectors.js on discovery -->
+        </div>
+      </div>
+
+      <!-- CONECTORES STATUS GRID -->
+      <div class="card-grid" id="connectors-grid">
+        <!-- Connectors Cards by connectors.js -->
+      </div>
+    </section>
+
+    <!-- 10. LOOKER SEMANTIC LAYER & METRIC GOVERNANCE PANE -->
+    <section id="pane-looker" class="tab-content-pane">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.2rem; font-weight: 700;">📊 Gobernanza Semántica de Looker & Catálogo de Métricas de Negocio</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">
+          Gobernanza oficial de métricas (MRR, Margen, Churn, CAC), dimensiones LookML y linaje hacia tableros ejecutivos y agentes de IA.
+        </p>
+      </div>
+
+      <div class="card-grid" id="looker-metrics-grid">
+        <!-- Rendered by looker.js -->
+      </div>
+    </section>
+
+    <!-- 11. POLICY AS CODE & KNOWLEDGE CATALOG MCP ENGINE PANE -->
+    <section id="pane-policies" class="tab-content-pane">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.2rem; font-weight: 700;">📜 Policy as Code & Knowledge Catalog MCP Engine</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">
+            Gestión, generación con IA, ejecución y auto-remediación de políticas de gobierno sobre metadatos de GCP Dataplex y BigQuery.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn-primary" onclick="triggerExecutePoliciesSuite()">🚀 Ejecutar Suite de Políticas</button>
+          <button class="btn-secondary" onclick="exportViolationsToCSV()">📥 Exportar Reporte (CSV)</button>
+        </div>
+      </div>
+
+      <!-- Compliance Scorecard -->
+      <div id="compliance-scorecard-container">
+        <!-- Rendered by policies.js -->
+      </div>
+
+      <!-- Natural Language Policy Generator -->
+      <div class="pastel-card" style="margin-bottom: 1.25rem;">
+        <h3 style="font-size: 1rem; font-weight: 700;">✨ Generador de Políticas con IA (Natural Language to Policy as Code)</h3>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.65rem;">
+          Escribe la condición que deseas auditar en lenguaje natural. El agente de Knowledge Catalog generará la especificación YAML y activará la regla automáticamente.
+        </p>
+        <div style="display: flex; gap: 0.6rem;">
+          <input type="text" id="policy-prompt-input" class="form-input" style="flex: 1;" placeholder="Ej: Auditar que todas las tablas de finanzas tengan calidad Dataplex > 95% y Data Steward asignado">
+          <button class="btn-primary" onclick="triggerGeneratePolicyFromPrompt()">⚡ Generar & Desplegar Política</button>
+        </div>
+      </div>
+
+      <!-- Active Violations & 1-Click Remediation -->
+      <div class="pastel-card" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1rem; font-weight: 700;">⚠️ Violaciones Detectadas & Auto-Remediación Instantánea</h3>
+          <span class="stat-metric-badge badge-rose">Auditoría en Vivo</span>
+        </div>
+        <div id="violations-container">
+          <!-- Rendered by policies.js -->
+        </div>
+      </div>
+
+      <!-- Active Policies Registry -->
+      <div class="pastel-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1rem; font-weight: 700;">📋 Catálogo de Políticas Versionadas en Knowledge Catalog</h3>
+          <span class="stat-metric-badge badge-blue">Policy Store</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="table-clean">
+            <thead>
+              <tr>
+                <th>Nombre de la Política & Descripción</th>
+                <th>Categoría</th>
+                <th>Severidad</th>
+                <th>Versión</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="policies-table-body">
+              <!-- Rendered by policies.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. CATALOG PANE (GLOBAL / ALL ROLES) -->
+    <section id="pane-catalog" class="tab-content-pane">
+      <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 0.9rem; margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+        <div style="flex: 1; min-width: 250px;">
+          <input type="text" id="catalog-search-input" class="form-input" style="width: 100%;" placeholder="🔍 Buscar por tabla, columna, descripción o dominio...">
+        </div>
+        <select id="filter-cloud" class="form-input" style="min-width: 180px;">
+          <option value="all">Todas las Nubes (GCP, AWS, Azure, On-Prem)</option>
+          <option value="GCP">Google Cloud Platform</option>
+          <option value="AWS">Amazon Web Services</option>
+          <option value="Azure">Microsoft Azure</option>
+          <option value="On-Premises">On-Premises & Hybrid</option>
+        </select>
+        <select id="filter-domain" class="form-input" style="min-width: 160px;">
+          <option value="all">Todos los Dominios</option>
+          <option value="clientes">Clientes y Fidelización</option>
+          <option value="finanzas">Finanzas y Facturación</option>
+          <option value="operaciones">Operaciones y Logística</option>
+          <option value="ventas">Ventas y Omnicanalidad</option>
+        </select>
+        <button class="btn-primary" onclick="openCreateTermModal()">+ Glosario</button>
+      </div>
+
+      <div class="card-grid" id="assets-grid">
+        <!-- Asset Cards Rendered by catalog.js -->
+      </div>
+    </section>
+
+    <!-- 13. METADATA MANAGEMENT & TAGGING PANE (KNOWLEDGE CATALOG & SDP) -->
+    <section id="pane-tagging" class="tab-content-pane">
+      <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+        <div style="flex: 1; min-width: 280px;">
+          <label class="form-label" for="tagging-asset-select" style="font-weight: 700; color: var(--pastel-blue-text);">
+            🎯 Seleccionar Activo a Gobernar y Etiquetar (MySQL / BigQuery):
+          </label>
+          <select id="tagging-asset-select" class="form-input" style="width: 100%; font-weight: 600;" onchange="loadAssetTags(this.value)">
+            <!-- Asset options dynamically loaded -->
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+          <button class="btn-secondary" onclick="document.getElementById('registered-tag-templates-modal').style.display='flex'">
+            📋 Ver Plantillas Registradas (Tag Templates)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tagging Dynamic Content -->
+      <div id="tagging-content-container">
+        <!-- Injected by tagging.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: Ver Plantillas Registradas de Knowledge Catalog -->
+  <div id="registered-tag-templates-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 680px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--text-main); font-size: 1.15rem; font-weight: 700;">📋 Plantillas Oficiales de Knowledge Catalog (Tag Templates)</h3>
+        <button class="btn-secondary" onclick="closeAllModals()" style="padding: 0.2rem 0.5rem;">✕</button>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem;">
+        Plantillas registradas en <code>projects/corp-analytics-prod/locations/us-central1/tagTemplates</code>:
+      </p>
+
+      <div id="tag-templates-catalog-list" style="margin-top: 1rem; max-height: 380px; overflow-y: auto;">
+        <!-- Injected by tagging.js -->
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+        <button class="btn-primary" onclick="closeAllModals()">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Editar Metadatos / Golden Query -->
+  <div id="metadata-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 id="modal-asset-title" style="color: var(--text-main); font-size: 1.15rem; font-weight: 700;">Editar Metadatos</h3>
+        <button class="btn-secondary" onclick="closeAllModals()" style="padding: 0.2rem 0.5rem;">✕</button>
+      </div>
+
+      <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+        <input type="hidden" id="edit-asset-id">
+        <div>
+          <label style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Ubicación Física:</label>
+          <div id="edit-asset-location" style="color: var(--pastel-blue-text); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; margin-top: 0.2rem;"></div>
+        </div>
+
+        <div>
+          <label for="edit-asset-description" style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Descripción Funcional / Técnica:</label>
+          <textarea id="edit-asset-description" rows="3" class="form-input" style="width: 100%; margin-top: 0.25rem;"></textarea>
+        </div>
+
+        <div>
+          <label for="edit-asset-steward" style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Data Steward Responsable:</label>
+          <input type="text" id="edit-asset-steward" class="form-input" style="width: 100%; margin-top: 0.25rem;">
+        </div>
+
+        <div>
+          <label for="edit-asset-golden-query" style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Golden Query Pre-Aprobada (SQL):</label>
+          <textarea id="edit-asset-golden-query" rows="3" class="form-input" style="width: 100%; font-family: 'JetBrains Mono', monospace; margin-top: 0.25rem;"></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.75rem;">
+          <button class="btn-secondary" onclick="closeAllModals()">Cancelar</button>
+          <button class="btn-primary" onclick="saveMetadataEdits()">💾 Guardar en Catálogo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/chat.js"></script>
+  <script src="/js/catalog.js"></script>
+  <script src="/js/dlp.js"></script>
+  <script src="/js/quality.js"></script>
+  <script src="/js/lineage.js"></script>
+  <script src="/js/stewards.js"></script>
+  <script src="/js/connectors.js"></script>
+  <script src="/js/policies.js"></script>
+  <script src="/js/looker.js"></script>
+  <script src="/js/tagging.js"></script>
+</body>
+</html>

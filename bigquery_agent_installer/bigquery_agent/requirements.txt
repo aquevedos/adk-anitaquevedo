@@ -1,0 +1,9 @@
+google-adk==1.37.0
+google-genai==2.16.0
+google-cloud-aiplatform[agent_engines,adk]==1.156.0
+cloudpickle==3.1.2
+google-cloud-bigquery==3.42.3
+google-auth==2.56.2
+google-cloud-logging
+google-cloud-dataplex
+python-dotenv

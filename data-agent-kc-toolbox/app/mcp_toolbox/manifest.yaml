@@ -1,0 +1,61 @@
+# MCP Toolbox source manifest.
+#
+# This project's MCP Toolbox is scoped to GCS + future sources only.
+# BigQuery access goes through BigQuery CA (ca_toolbox_agent.py).
+# Dataplex access goes through the direct dataplex_v1 SDK (dataplex_utils.py).
+# Those direct paths preserve the user-credential hook (auth_utils.get_user_credentials)
+# so end-user delegation lights up automatically when ADK exposes user identity
+# in ToolContext — see app/mcp_toolbox/README.md for the architectural reasoning.
+#
+# The deploy script (`make deploy-mcp`) reads this file, filters to enabled
+# sources, validates inputs, grants IAM, composes the per-source YAML fragments
+# into a single tools.yaml, and deploys to Cloud Run.
+#
+# To add a new source: drop a `sources/<name>.yaml` fragment, add an entry
+# below, run `make deploy-mcp`. See app/mcp_toolbox/README.md for the full
+# schema and worked examples.
+
+sources:
+  gcs:
+    enabled: true
+    file: sources/gcs.yaml
+    iam_roles:
+      # storage.admin covers all three GCS tools: list_buckets (needs
+      # project-wide storage.buckets.list), list_objects, read_object.
+      # Narrower built-in roles either lack buckets.list at project scope
+      # (objectViewer) or only bind at bucket scope (legacyBucketReader).
+      # Swap for a custom role if you need strict least-privilege.
+      - roles/storage.admin
+    required_env: [PROJECT_ID]
+    apis: [storage.googleapis.com]
+    description: Cloud Storage access to buckets and objects
+
+  bigquery:
+    # Ships disabled. Enable only when deploying the agent with
+    # DATAPLEX_ENABLED=false — see manifest-no-dataplex.yaml for the
+    # ready-to-use variant. When Dataplex is on, `dataplex_search` handles
+    # table discovery and this source is redundant. Provides discovery tools
+    # only (list_datasets / list_tables / get_table_info) — execution stays
+    # with Conversational Analytics via `call_bigquery_ca`.
+    enabled: false
+    file: sources/bigquery.yaml
+    iam_roles:
+      - roles/bigquery.metadataViewer
+    required_env: [PROJECT_ID]
+    apis: [bigquery.googleapis.com]
+    description: BigQuery introspection (datasets, tables, schemas) — no SQL execution
+
+  spanner:
+    # Flip enabled: true and provide SPANNER_INSTANCE / SPANNER_DATABASE via
+    # `make deploy-mcp EXTRA_ENV="SPANNER_INSTANCE=my-inst,SPANNER_DATABASE=my-db"`
+    # to enable. IAM roles below will be granted automatically.
+    # Note: like GCS, Spanner via MCP is SA-only — useClientOAuth is not yet
+    # implemented for the Spanner source upstream.
+    enabled: false
+    file: sources/spanner.yaml
+    iam_roles:
+      - roles/spanner.databaseUser
+      - roles/spanner.viewer
+    required_env: [PROJECT_ID, SPANNER_INSTANCE, SPANNER_DATABASE]
+    apis: [spanner.googleapis.com]
+    description: Spanner SQL execution and schema introspection (ships disabled)

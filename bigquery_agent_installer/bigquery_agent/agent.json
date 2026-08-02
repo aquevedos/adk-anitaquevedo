@@ -1,0 +1,23 @@
+{
+  "name": "bigquery_agent",
+  "description": "Records invoices into the pool_data.invoices BigQuery table and answers questions about invoice data by running SQL queries.",
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["application/json"],
+  "skills": [
+    {
+      "id": "record_invoice",
+      "name": "Record Invoice",
+      "description": "Insert a new invoice (vendor_name, invoice_id, invoice_date, invoice_total, payment_status) into the pool_data.invoices table, stamping date_processed with today's date.",
+      "tags": ["bigquery", "invoices", "write"]
+    },
+    {
+      "id": "analyze_invoices",
+      "name": "Analyze Invoices",
+      "description": "Run SQL queries against the pool_data.invoices table to answer questions such as totals by month, unpaid invoices, and counts.",
+      "tags": ["bigquery", "invoices", "analytics"]
+    }
+  ],
+  "url": "https://REPLACE_WITH_DEPLOYED_AGENT_A2A_ENDPOINT/a2a/bigquery_agent",
+  "capabilities": {},
+  "version": "1.0.0"
+}

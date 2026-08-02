@@ -1,0 +1,5003 @@
+{
+  "assets": [
+    {
+      "id": "gcp_bq_customers_360",
+      "name": "Clientes 360 Maestro",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "corp-analytics-prod",
+      "dataset": "marketing_governance",
+      "table_name": "dim_clientes_360",
+      "description": "Tabla maestra consolidada de clientes con historial de compras, scoring de fidelización y datos de contacto.",
+      "domain": "clientes",
+      "owner": "Equipo de Marketing & Growth",
+      "steward": "María Fernández (maria.fernandez@empresa.com)",
+      "tier": "Tier 1 - Crítico",
+      "storage_format": "BigQuery Managed Table",
+      "last_modified": "2026-07-30T18:45:00Z",
+      "columns": [
+        {
+          "name": "customer_id",
+          "type": "STRING",
+          "description": "Identificador único global del cliente (UUID v4).",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "full_name",
+          "type": "STRING",
+          "description": "Nombre y apellidos completos del cliente.",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.2
+        },
+        {
+          "name": "email_address",
+          "type": "STRING",
+          "description": "Correo electrónico corporativo o personal validado.",
+          "is_pii": true,
+          "dlp_info_type": "EMAIL_ADDRESS",
+          "policy_tag": "Taxonomy_PII_HighRestricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.5
+        },
+        {
+          "name": "phone_number",
+          "type": "STRING",
+          "description": "Número telefónico con código de país E.164.",
+          "is_pii": true,
+          "dlp_info_type": "PHONE_NUMBER",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 2.1
+        },
+        {
+          "name": "credit_card_hash",
+          "type": "STRING",
+          "description": "Token PCI encriptado del método de pago principal.",
+          "is_pii": true,
+          "dlp_info_type": "CREDIT_CARD_NUMBER",
+          "policy_tag": "Taxonomy_PCI_Restricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 15.4
+        },
+        {
+          "name": "customer_segment",
+          "type": "STRING",
+          "description": "Segmento comercial (VIP, Recurrente, Nuevo, En Riesgo).",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "total_spend_ytd",
+          "type": "NUMERIC",
+          "description": "Monto acumulado de compras facturadas en el año en curso.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Crítico",
+        "info_types_found": [
+          "CUSTOM_EMPLOYEE_ID",
+          "PERSON_NAME",
+          "EMAIL_ADDRESS",
+          "PHONE_NUMBER",
+          "CREDIT_CARD_NUMBER"
+        ],
+        "last_scan_date": "2026-07-31 15:34 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 96.1,
+        "freshness_hours": 2,
+        "null_rate_pct": 2.6,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 5,
+        "total_rules": 5,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[On-Prem / PostgreSQL] core_erp.public.tbl_clientes",
+            "type": "Database Table",
+            "transformation": "CDC Airbyte Sync"
+          },
+          {
+            "source": "[SaaS / Salesforce] Contact & Account Objects",
+            "type": "CRM API",
+            "transformation": "Cloud Data Fusion Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] mart_ventas.fct_ordenes_consumo",
+            "type": "Datamart",
+            "purpose": "Reportes ejecutivos de ingresos"
+          },
+          {
+            "target": "[BI / Looker] Dashboard Ejecutivo 360",
+            "type": "Dashboard",
+            "purpose": "Toma de decisiones C-Level"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Fidelización",
+            "type": "AI Pipeline",
+            "purpose": "Asistente inteligente de soporte al cliente"
+          }
+        ]
+      },
+      "golden_query": "SELECT customer_id, customer_segment, total_spend_ytd FROM `corp-analytics-prod.marketing_governance.dim_clientes_360` WHERE customer_segment = 'VIP' ORDER BY total_spend_ytd DESC LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Certificado por Data Steward",
+        "notes": "Certificado por Data Steward para Modelos RAG"
+      },
+      "tag_templates": {
+        "data_governance_core": {
+          "template_id": "data_governance_core",
+          "template_name": "Plantilla de Gobernanza de Datos (Core)",
+          "fields": {
+            "data_steward": "María Fernández (maria.fernandez@empresa.com)",
+            "data_domain": "clientes",
+            "confidentiality_level": "Confidencial PII",
+            "retention_policy_months": 24,
+            "golden_source": "BigQuery (corp-analytics-prod)",
+            "ai_certified": true
+          },
+          "last_updated": "2026-07-31 04:34 UTC"
+        },
+        "sdp_security_classification": {
+          "template_id": "sdp_security_classification",
+          "template_name": "Plantilla de Seguridad & SDP (Sensitive Data Protection)",
+          "fields": {
+            "infotypes_detected": "PHONE_NUMBER, EMAIL_ADDRESS, CREDIT_CARD_NUMBER, PERSON_NAME",
+            "dlp_risk_level": "Crítico",
+            "dynamic_masking_enabled": true,
+            "policy_tag_taxonomy": "Taxonomy_PII_Confidential",
+            "last_scan_date": "2026-07-31 04:34 UTC"
+          },
+          "last_updated": "2026-07-31 04:34 UTC"
+        },
+        "dataplex_quality_slas": {
+          "template_id": "dataplex_quality_slas",
+          "template_name": "Plantilla de Calidad Dataplex & SLAs",
+          "fields": {
+            "quality_score": 96.1,
+            "freshness_hours": 2,
+            "rules_status": "5 de 5 reglas aprobadas (100%)"
+          },
+          "last_updated": "2026-07-31 04:34 UTC"
+        }
+      }
+    },
+    {
+      "id": "aws_redshift_orders_dw",
+      "name": "Facturación y Órdenes Globales",
+      "cloud": "AWS",
+      "service": "Amazon Redshift",
+      "project_or_db": "dw_enterprise_prod",
+      "dataset": "sales_schema",
+      "table_name": "fct_sales_orders",
+      "description": "Historial de transacciones de ventas omnicanal, pasarelas de pago y cumplimiento logístico.",
+      "domain": "ventas",
+      "owner": "Dirección Comercial Global",
+      "steward": "Andrés Silva (andres.silva@empresa.com)",
+      "tier": "Tier 1 - Crítico",
+      "storage_format": "Redshift Columnar (Sortkey: order_timestamp)",
+      "last_modified": "2026-07-30T21:10:00Z",
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "VARCHAR(64)",
+          "description": "Código identificador de orden comercial.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "customer_id",
+          "type": "VARCHAR(64)",
+          "description": "Foreign Key hacia dim_clientes_360.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.1
+        },
+        {
+          "name": "shipping_address_line",
+          "type": "VARCHAR(255)",
+          "description": "Dirección física de entrega residencial o corporativa.",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 1.2
+        },
+        {
+          "name": "billing_tax_id",
+          "type": "VARCHAR(32)",
+          "description": "Documento de identificación fiscal (RFC / SSN / NIF).",
+          "is_pii": true,
+          "dlp_info_type": "TAX_ID_RFC_SSN",
+          "policy_tag": "Taxonomy_PII_HighRestricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 4.8
+        },
+        {
+          "name": "order_amount_usd",
+          "type": "DECIMAL(12,2)",
+          "description": "Monto total neto de la transacción en dólares.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "LOCATION_GEO",
+          "TAX_ID_RFC_SSN"
+        ],
+        "last_scan_date": "2026-07-31 16:23 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 93.8,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.8,
+        "duplicate_rate_pct": 0.01,
+        "anomaly_count": 1,
+        "rules_passed": 9,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[AWS / S3] s3://corp-ecommerce-raw/orders_stream/",
+            "type": "Object Storage",
+            "transformation": "AWS Glue ETL PySpark"
+          },
+          {
+            "source": "[SaaS / Stripe] Webhook Payment Events",
+            "type": "SaaS Gateway",
+            "transformation": "Lambda Ingestion"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] analytics_lake.fct_sales_replicated",
+            "type": "Federated Query",
+            "purpose": "Analítica cruzada multi-cloud"
+          },
+          {
+            "target": "[BI / PowerBI] Tablero Financiero Ventas",
+            "type": "Reporting",
+            "purpose": "Control de metas mensuales"
+          }
+        ]
+      },
+      "golden_query": "SELECT order_id, customer_id, order_amount_usd FROM sales_schema.fct_sales_orders WHERE order_timestamp >= CURRENT_DATE - INTERVAL '30 days' AND order_amount_usd > 0;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Campos fiscales y direcciones debidamente ofuscados en la capa analítica."
+      }
+    },
+    {
+      "id": "azure_synapse_crm_lake",
+      "name": "Prospectos y Leads Omnicanal",
+      "cloud": "Azure",
+      "service": "Azure Synapse",
+      "project_or_db": "synapse-enterprise-workspace",
+      "dataset": "crm_curated",
+      "table_name": "prospects_lake_v2",
+      "description": "Interacciones previas, registros web y scoring de predisposición a compra de prospectos.",
+      "domain": "ventas",
+      "owner": "Equipo de Growth & Adquisición",
+      "steward": "Andrés Silva (andres.silva@empresa.com)",
+      "tier": "Tier 2 - Operativo",
+      "storage_format": "Delta Lake on ADLS Gen2",
+      "last_modified": "2026-07-30T14:20:00Z",
+      "columns": [
+        {
+          "name": "lead_id",
+          "type": "BIGINT",
+          "description": "ID secuencial del prospecto.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "contact_email",
+          "type": "NVARCHAR(150)",
+          "description": "Email capturado en campañas digitales.",
+          "is_pii": true,
+          "dlp_info_type": "EMAIL_ADDRESS",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 1.5
+        },
+        {
+          "name": "contact_phone",
+          "type": "NVARCHAR(50)",
+          "description": "Teléfono registrado en formulario web.",
+          "is_pii": true,
+          "dlp_info_type": "PHONE_NUMBER",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 12.8
+        },
+        {
+          "name": "lead_score",
+          "type": "FLOAT",
+          "description": "Puntaje de propensión predictiva (0 a 100).",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto (Acción Requerida)",
+        "info_types_found": [
+          "EMAIL_ADDRESS",
+          "PHONE_NUMBER"
+        ],
+        "last_scan_date": "2026-07-30 02:00 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 87.2,
+        "freshness_hours": 8,
+        "null_rate_pct": 4.2,
+        "duplicate_rate_pct": 1.4,
+        "anomaly_count": 3,
+        "rules_passed": 7,
+        "total_rules": 9,
+        "status": "WARNING"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Azure / ADLS Gen2] raw/landing/web_forms/",
+            "type": "Blob Storage",
+            "transformation": "Azure Data Factory Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[Azure / PowerBI] Reporte de Conversión Semanal",
+            "type": "Report",
+            "purpose": "Seguimiento de campañas de marketing"
+          }
+        ]
+      },
+      "golden_query": "SELECT lead_id, lead_score FROM crm_curated.prospects_lake_v2 WHERE lead_score >= 80;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Non-Compliant (PII Unmasked)",
+        "notes": "Advertencia de Gobierno: Calidad < 90% (87.2%) y datos PII sin enmascarar. No apto para agentes de IA hasta aplicar políticas."
+      }
+    },
+    {
+      "id": "onprem_pg_inventory_core",
+      "name": "Inventario y Stock en Centros de Distribución",
+      "cloud": "On-Premises",
+      "service": "PostgreSQL Cluster",
+      "project_or_db": "db_wms_logistics",
+      "dataset": "public",
+      "table_name": "tbl_inventario_bodegas",
+      "description": "Disponibilidad física de productos por almacén, lotes y fechas de vencimiento.",
+      "domain": "operaciones",
+      "owner": "Cadena de Suministro y Almacenes",
+      "steward": "Valeria Ramos (valeria.ramos@empresa.com)",
+      "tier": "Tier 1 - Crítico",
+      "storage_format": "PostgreSQL Relational Tablespace",
+      "last_modified": "2026-07-30T22:00:00Z",
+      "columns": [
+        {
+          "name": "sku_code",
+          "type": "VARCHAR(32)",
+          "description": "Código SKU estandarizado del artículo.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "warehouse_id",
+          "type": "VARCHAR(16)",
+          "description": "Identificador del centro de distribución.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "available_quantity",
+          "type": "INTEGER",
+          "description": "Unidades físicas listas para despacho.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "safety_stock_level",
+          "type": "INTEGER",
+          "description": "Nivel mínimo de seguridad para reorden automático.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 06:00 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 98.9,
+        "freshness_hours": 0.5,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 8,
+        "total_rules": 8,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[On-Prem / SAP] WMS Module RFCs",
+            "type": "ERP System",
+            "transformation": "Realtime CDC"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] logistics_dw.snapshot_stock_diario",
+            "type": "Data Warehouse",
+            "purpose": "Proyecciones de demanda"
+          },
+          {
+            "target": "[AI / Vertex AI] Agente RAG Disponibilidad Omnicanal",
+            "type": "AI Pipeline",
+            "purpose": "Respuestas instantáneas de stock a clientes"
+          }
+        ]
+      },
+      "golden_query": "SELECT sku_code, warehouse_id, available_quantity FROM tbl_inventario_bodegas WHERE available_quantity < safety_stock_level;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant (No Sensitive Data)",
+        "notes": "100% verificado y aprobado para consultas en tiempo real por agentes conversacionales."
+      },
+      "tag_templates": {
+        "data_governance_core": {
+          "template_id": "data_governance_core",
+          "template_name": "Plantilla de Gobernanza de Datos (Core)",
+          "fields": {
+            "data_steward": "Valeria Ramos (valeria.ramos@empresa.com)",
+            "data_domain": "operaciones",
+            "confidentiality_level": "Uso Interno",
+            "retention_policy_months": 24,
+            "golden_source": "BigQuery (db_wms_logistics)",
+            "ai_certified": true
+          },
+          "last_updated": "2026-07-31 15:45 UTC"
+        },
+        "sdp_security_classification": {
+          "template_id": "sdp_security_classification",
+          "template_name": "Plantilla de Seguridad & SDP (Sensitive Data Protection)",
+          "fields": {
+            "infotypes_detected": "Ninguno detectado",
+            "dlp_risk_level": "Bajo / Sin PII",
+            "dynamic_masking_enabled": false,
+            "policy_tag_taxonomy": "Taxonomy_General_Internal",
+            "last_scan_date": "2026-07-30 06:00 UTC"
+          },
+          "last_updated": "2026-07-31 15:45 UTC"
+        },
+        "dataplex_quality_slas": {
+          "template_id": "dataplex_quality_slas",
+          "template_name": "Plantilla de Calidad Dataplex & SLAs",
+          "fields": {
+            "quality_score": 98.9,
+            "freshness_hours": 0.5,
+            "rules_status": "5 de 5 reglas aprobadas (100%)"
+          },
+          "last_updated": "2026-07-31 15:45 UTC"
+        }
+      }
+    },
+    {
+      "id": "gcp_bq_financial_ledger",
+      "name": "Libro Mayor Contable y Facturación",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "corp-finance-secure",
+      "dataset": "accounting_ledger",
+      "table_name": "gl_journal_entries",
+      "description": "Asientos contables consolidados, centros de costo, cuentas contables y estados financieros.",
+      "domain": "finanzas",
+      "owner": "Dirección General de Finanzas",
+      "steward": "Carlos Mendoza (carlos.mendoza@empresa.com)",
+      "tier": "Tier 1 - Crítico",
+      "storage_format": "BigQuery Partitioned by Entry_Date",
+      "last_modified": "2026-07-30T20:00:00Z",
+      "columns": [
+        {
+          "name": "entry_id",
+          "type": "STRING",
+          "description": "Número de asiento contable.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "account_code",
+          "type": "STRING",
+          "description": "Código de cuenta según el catálogo contable IFRS.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "bank_account_iban",
+          "type": "STRING",
+          "description": "Número de cuenta bancaria o CLABE interbancaria.",
+          "is_pii": true,
+          "dlp_info_type": "IBAN_BANK_ACCOUNT",
+          "policy_tag": "Taxonomy_Financial_HighConfidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 8.0
+        },
+        {
+          "name": "debit_amount",
+          "type": "NUMERIC",
+          "description": "Monto al debe en moneda local.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "credit_amount",
+          "type": "NUMERIC",
+          "description": "Monto al haber en moneda local.",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Crítico",
+        "info_types_found": [
+          "IBAN_BANK_ACCOUNT",
+          "TAX_ID_RFC_SSN"
+        ],
+        "last_scan_date": "2026-07-30 04:00 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 99.4,
+        "freshness_hours": 4,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 14,
+        "total_rules": 14,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[On-Prem / Oracle] Oracle Financials GL",
+            "type": "Core Banking ERP",
+            "transformation": "Datastream Replicator"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] mart_finanzas.estados_financieros_cierre",
+            "type": "Datamart",
+            "purpose": "Auditoría externa y balance general"
+          },
+          {
+            "target": "[BI / Looker] Tablero de Flujo de Caja",
+            "type": "Dashboard",
+            "purpose": "Supervisión de Tesorería"
+          }
+        ]
+      },
+      "golden_query": "SELECT entry_id, account_code, debit_amount, credit_amount FROM `corp-finance-secure.accounting_ledger.gl_journal_entries` WHERE entry_date = CURRENT_DATE();",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant (SOX & IFRS Audited)",
+        "notes": "Acceso restringido por IAM con política de enmascaramiento total en campos IBAN."
+      }
+    },
+    {
+      "id": "gcp_bq_ecommerce_distribution_centers",
+      "name": "Distribution Centers (ecommerce)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "ecommerce",
+      "table_name": "distribution_centers",
+      "description": "Tabla real de BigQuery con 10 filas en el dataset 'ecommerce'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (10 filas, 0.00 MB)",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "latitude",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "longitude",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "distribution_center_geom",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "PERSON_NAME",
+          "LOCATION_GEO"
+        ],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/ecommerce/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo ecommerce",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.ecommerce.distribution_centers` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (10 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_ecommerce_events",
+      "name": "Events (ecommerce)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "ecommerce",
+      "table_name": "events",
+      "description": "Tabla real de BigQuery con 2,423,365 filas en el dataset 'ecommerce'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (2,423,365 filas, 366.99 MB)",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "sequence_number",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "session_id",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "ip_address",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "city",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "state",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "postal_code",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "browser",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "traffic_source",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "uri",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "event_type",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "LOCATION_GEO"
+        ],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/ecommerce/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo ecommerce",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.ecommerce.events` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (2,423,365 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_ecommerce_gold_customer_churn_features",
+      "name": "Gold Customer Churn Features (ecommerce)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "ecommerce",
+      "table_name": "gold_customer_churn_features",
+      "description": "Tabla real de BigQuery con 18,644 filas en el dataset 'ecommerce'.",
+      "domain": "clientes",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (18,644 filas, 1.05 MB)",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "recency",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "frequency",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "monetary",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "average_order_value",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "user_age",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "user_gender",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "is_churned",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/ecommerce/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo ecommerce",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.ecommerce.gold_customer_churn_features` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Tabla real alojada en BigQuery (18,644 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_fabril_Gastos_master",
+      "name": "Gastos Master (fabril)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "fabril",
+      "table_name": "Gastos_master",
+      "description": "Tabla real de BigQuery con 160 filas en el dataset 'fabril'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (160 filas, 0.04 MB)",
+      "columns": [
+        {
+          "name": "id_gasto",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha",
+          "type": "DATE",
+          "description": "Campo real de BigQuery (DATE)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ano",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Mes",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EC_3_CodCanalventas",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Canal",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Canal_Agrupado",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Categoria_Mercadeo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Cod_Grup_Articulo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Grupo_Articulos",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Cod_Formato",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Formato_Nuevo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Reposiciones",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Publicidad",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Logistica_CD",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Logistica_Staff",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Mercadeo_Staff",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Variable_Directo",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Fijo_Canal",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Administracion",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Depreciacion",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Impuestos",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Gerencias_Ventas_y_Admin",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 23:49 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/fabril/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo fabril",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.fabril.Gastos_master` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant (Masked & Governed)",
+        "notes": "Dataset protegido con Policy Tags de BigQuery y Dynamic Masking. Apto para IA."
+      }
+    },
+    {
+      "id": "gcp_bq_fabril_OBT_business_review_2026",
+      "name": "Obt Business Review 2026 (fabril)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "fabril",
+      "table_name": "OBT_business_review_2026",
+      "description": "Tabla real de BigQuery con 200 filas en el dataset 'fabril'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (200 filas, 0.10 MB)",
+      "columns": [
+        {
+          "name": "Categoria_Mercadeo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Tipo_Producto",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ano",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Cod_Grup_Articulo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Grupo_Articulos",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Formato",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Formato_Nuevo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Canal",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Canal_Agrupado",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "UMB",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Mes",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Fecha",
+          "type": "DATE",
+          "description": "Campo real de BigQuery (DATE)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Type",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Cantidad",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ventas_COP_B",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Rebate_notas_manuales",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ventas_COP",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Costo_Variable",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Costo_Venta",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Transporte",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Variable_Directo",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Fijo_Canal",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Mercadeo_Staff",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Administracion",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Logistica_CD",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Logistica_Staff",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Reposiciones",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Publicidad",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Impuestos",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Depreciacion",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Margen_Bruto",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Margen_de_Contribucion",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Fijo",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EBITDA",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EBITDAFE",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Kilos",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Cantidad_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ventas_COP_B_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Rebate_notas_manuales_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ventas_COP_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Costo_Variable_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Costo_Venta_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Transporte_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Variable_Directo_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Fijo_Canal_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Mercadeo_Staff_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Administracion_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Logistica_CD_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Logistica_Staff_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Reposiciones_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Publicidad_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Impuestos_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Depreciacion_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Margen_Bruto_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Margen_de_Contribucion_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Gasto_Fijo_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EBITDA_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EBITDAFE_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Kilos_PPTO",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/fabril/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo fabril",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.fabril.OBT_business_review_2026` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Tabla real alojada en BigQuery (200 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_fabril_costo_manufactura",
+      "name": "Costo Manufactura (fabril)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "fabril",
+      "table_name": "costo_manufactura",
+      "description": "Tabla real de BigQuery con 150 filas en el dataset 'fabril'.",
+      "domain": "ventas",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (150 filas, 0.03 MB)",
+      "columns": [
+        {
+          "name": "id_costo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha",
+          "type": "DATE",
+          "description": "Campo real de BigQuery (DATE)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Ano",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Mes",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EM_1_CodPlanta",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EM_1_DescPlanta",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EM_2_OrdenProduccion",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EM_4_CodigoMaterial",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Categoria_Mercadeo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Tipo_Producto",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EP_8_CodGrupoArticulos",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Grupo_Articulos",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "EP_6_CodFormatoProducto",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "Formato_Nuevo",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "UMB",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "DT_1_CantidadFabricada",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "DT_11_CostoFijoAsignado",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "DT_12_CostoUnitarioVariable",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "DT_13_CostoVariableTotal",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "DT_14_CostoTotalManufactura",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/fabril/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo fabril",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.fabril.costo_manufactura` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Tabla real alojada en BigQuery (150 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_flights_dataset_cymbalair_policies",
+      "name": "Cymbalair Policies (flights_dataset)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "flights_dataset",
+      "table_name": "cymbalair_policies",
+      "description": "Tabla real de BigQuery con 11 filas en el dataset 'flights_dataset'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (11 filas, 0.18 MB)",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "content",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "embedding",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/flights_dataset/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo flights_dataset",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.flights_dataset.cymbalair_policies` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Tabla real alojada en BigQuery (11 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_flights_dataset_flight_history",
+      "name": "Flight History (flights_dataset)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "flights_dataset",
+      "table_name": "flight_history",
+      "description": "Tabla real de BigQuery con 117,550 filas en el dataset 'flights_dataset'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (117,550 filas, 9.84 MB)",
+      "columns": [
+        {
+          "name": "flight_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "airline",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "flight_number",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "departure_airport_iata",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "departure_airport_city",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "arrival_airport_iata",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "arrival_airport_city",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "scheduled_departure",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "departure_delay_minutes",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "scheduled_arrival",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "arrival_delay_minutes",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/flights_dataset/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo flights_dataset",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.flights_dataset.flight_history` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Tabla real alojada en BigQuery (117,550 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_flights_dataset_ticket_sales_history",
+      "name": "Ticket Sales History (flights_dataset)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "flights_dataset",
+      "table_name": "ticket_sales_history",
+      "description": "Tabla real de BigQuery con 4,008 filas en el dataset 'flights_dataset'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (4,008 filas, 0.31 MB)",
+      "columns": [
+        {
+          "name": "ticket_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "flight_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "booking_time",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "flight_date",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "customer_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fare_class",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "base_fare",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "taxes",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": true,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "total_fare",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "booking_channel",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "days_to_departure_at_booking",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/flights_dataset/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo flights_dataset",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.flights_dataset.ticket_sales_history` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (4,008 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_governed_data_sdp_scan_customer",
+      "name": "Customer (governed_data_sdp_scan)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "governed_data_sdp_scan",
+      "table_name": "customer",
+      "description": "Tabla real de BigQuery con 0 filas en el dataset 'governed_data_sdp_scan'.",
+      "domain": "clientes",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (0 filas, 0.00 MB)",
+      "columns": [
+        {
+          "name": "quote",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "info_type",
+          "type": "RECORD",
+          "description": "Campo real de BigQuery (RECORD)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "likelihood",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "create_time",
+          "type": "RECORD",
+          "description": "Campo real de BigQuery (RECORD)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "resource_name",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "trigger_name",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "labels",
+          "type": "RECORD",
+          "description": "Campo real de BigQuery (RECORD)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "job_create_time",
+          "type": "RECORD",
+          "description": "Campo real de BigQuery (RECORD)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "job_name",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "finding_id",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Medio",
+        "info_types_found": [
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-31 00:22 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 85.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "WARNING"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/governed_data_sdp_scan/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo governed_data_sdp_scan",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.governed_data_sdp_scan.customer` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (0 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_recetamedicas_prescripciones",
+      "name": "Prescripciones (recetamedicas)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "recetamedicas",
+      "table_name": "prescripciones",
+      "description": "Tabla real de BigQuery con 6 filas en el dataset 'recetamedicas'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (6 filas, 0.00 MB)",
+      "columns": [
+        {
+          "name": "nombre_paciente",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "nombre_medico",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "id_medico",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "diagnostico",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "clinica_seleccionada",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "medicamentos",
+          "type": "RECORD",
+          "description": "Campo real de BigQuery (RECORD)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "notas_adicionales",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha_extraccion",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "archivo_origen",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "PERSON_NAME",
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/recetamedicas/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo recetamedicas",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.recetamedicas.prescripciones` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (6 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_recetamedicas_prescripciones_cloud_run",
+      "name": "Prescripciones Cloud Run (recetamedicas)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "recetamedicas",
+      "table_name": "prescripciones_cloud_run",
+      "description": "Tabla real de BigQuery con 1 filas en el dataset 'recetamedicas'.",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (1 filas, 0.00 MB)",
+      "columns": [
+        {
+          "name": "numero_receta",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "paciente_nombre",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "paciente_apellido",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "paciente_cedula",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "medico_nombre",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "clinicas_inferidas",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "medicamentos_detalle",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha_registro",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "archivo_origen",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Protegido (Policy Tags Activas)",
+        "info_types_found": [
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-30 23:51 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/recetamedicas/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo recetamedicas",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.recetamedicas.prescripciones_cloud_run` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant (Masked & Governed)",
+        "notes": "Dataset protegido con Policy Tags de BigQuery y Dynamic Masking. Apto para IA."
+      }
+    },
+    {
+      "id": "gcp_bq_retail_demo_distribution_centers",
+      "name": "Distribution Centers (retail_demo)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "retail_demo",
+      "table_name": "distribution_centers",
+      "description": "The Look fictitious e-commerce dataset: distribution_centers table",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (10 filas, 0.00 MB)",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "latitude",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "longitude",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "distribution_center_geom",
+          "type": "GEOGRAPHY",
+          "description": "Campo real de BigQuery (GEOGRAPHY)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "PERSON_NAME",
+          "LOCATION_GEO"
+        ],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/retail_demo/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo retail_demo",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.retail_demo.distribution_centers` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (10 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_retail_demo_inventory_items",
+      "name": "Inventory Items (retail_demo)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "retail_demo",
+      "table_name": "inventory_items",
+      "description": "Programatically generated inventory for The Look fictitious e-commerce store",
+      "domain": "operaciones",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (489,968 filas, 77.53 MB)",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "sold_at",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "cost",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_category",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_name",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_brand",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_retail_price",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_department",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_sku",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_distribution_center_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/retail_demo/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo retail_demo",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.retail_demo.inventory_items` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": false,
+        "compliance_status": "Pending DLP Masking",
+        "notes": "Tabla real alojada en BigQuery (489,968 filas)."
+      }
+    },
+    {
+      "id": "gcp_bq_retail_demo_order_items",
+      "name": "Order Items (retail_demo)",
+      "cloud": "GCP",
+      "service": "BigQuery",
+      "project_or_db": "agentspace-demos-466121",
+      "dataset": "retail_demo",
+      "table_name": "order_items",
+      "description": "Programatically generated order items for The Look fictitious e-commerce store",
+      "domain": "ventas",
+      "owner": "Data Engineering GCP",
+      "steward": "Administrador de Gobierno GCP",
+      "tier": "Tier 1 - Producción GCP",
+      "storage_format": "BigQuery Table (181,397 filas, 12.98 MB)",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "order_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "product_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "inventory_item_id",
+          "type": "INTEGER",
+          "description": "Campo real de BigQuery (INTEGER)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "description": "Campo real de BigQuery (STRING)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "shipped_at",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "delivered_at",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "returned_at",
+          "type": "TIMESTAMP",
+          "description": "Campo real de BigQuery (TIMESTAMP)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "sale_price",
+          "type": "FLOAT",
+          "description": "Campo real de BigQuery (FLOAT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo / Sin PII",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-30 UTC",
+        "policy_tags_applied": false,
+        "dynamic_masking_enabled": false
+      },
+      "dataplex_quality": {
+        "overall_score": 96.0,
+        "freshness_hours": 2,
+        "null_rate_pct": 0.2,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 10,
+        "total_rules": 10,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[GCP / Cloud Storage] gs://agentspace-demos-466121-raw/retail_demo/",
+            "type": "Cloud Storage Bucket",
+            "transformation": "Cloud Dataflow Pipeline"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[BI / Looker] Dashboard Operativo retail_demo",
+            "type": "Looker Studio",
+            "purpose": "Analítica de negocio"
+          },
+          {
+            "target": "[AI / Vertex AI] RAG Agent Endpoint",
+            "type": "Vertex AI Search",
+            "purpose": "Consultas agénticas inteligentes"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `agentspace-demos-466121.retail_demo.order_items` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "compliance_status": "Compliant",
+        "notes": "Tabla real alojada en BigQuery (181,397 filas)."
+      }
+    },
+    {
+      "id": "ext_mysql_bdcomercial_clientes",
+      "name": "MYSQL Clientes",
+      "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+      "service": "Aiven Cloud MySQL Engine",
+      "project_or_db": "mysql-1c645071-google-beed.j.aivencloud.com:10283",
+      "dataset": "bdcomercial",
+      "table_name": "clientes",
+      "domain": "clientes",
+      "steward": "Lucía Morales (Lead Data Steward)",
+      "storage_format": "MySQL 8.0 InnoDB",
+      "row_count": 50,
+      "columns_count": 4,
+      "description": "Tabla `clientes` descubierta en vivo desde MySQL `bdcomercial` con 50 registros y 4 columnas indexadas.",
+      "columns": [
+        {
+          "name": "cliente_id",
+          "type": "BIGINT",
+          "description": "Columna cliente_id extraída de MySQL `bdcomercial.clientes` (BIGINT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": true,
+          "null_percentage": 0.0,
+          "business_tag": "PII: Identidad Personal"
+        },
+        {
+          "name": "nombre_cliente",
+          "type": "TEXT",
+          "description": "Columna nombre_cliente extraída de MySQL `bdcomercial.clientes` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0,
+          "business_tag": "Nombre y Apellido Cliente"
+        },
+        {
+          "name": "ciudad",
+          "type": "TEXT",
+          "description": "Columna ciudad extraída de MySQL `bdcomercial.clientes` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": "Taxonomy_Location_Restricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0,
+          "business_tag": "Ubicación Residencia"
+        },
+        {
+          "name": "segmento",
+          "type": "TEXT",
+          "description": "Columna segmento extraída de MySQL `bdcomercial.clientes` (TEXT)",
+          "is_pii": false,
+          "dlp_info_type": "",
+          "policy_tag": "",
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0,
+          "business_tag": "Atributo de Negocio"
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Alto",
+        "info_types_found": [
+          "PERSON_NAME",
+          "LOCATION_GEO"
+        ],
+        "last_scan_date": "2026-07-31 16:23 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 100.0,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 5,
+        "total_rules": 5,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Aiven Cloud] MySQL Cluster Online (mysql-1c645071-google-beed.j.aivencloud.com:10283/bdcomercial)",
+            "type": "OLTP Database / MySQL InnoDb",
+            "transformation": "Conexión JDBC / TLS SSL Live Sync"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] Lakehouse Replicated Zone (`corp-analytics-prod.raw_zone.mysql_clientes_sync`)",
+            "type": "Federated Query / BigLake",
+            "purpose": "Replicación Diaria para Gobierno Centralizado"
+          },
+          {
+            "target": "[Looker Studio] Tablero Comercial Clientes",
+            "type": "Executive BI Dashboard",
+            "purpose": "Monitoreo Operativo en Tiempo Real"
+          },
+          {
+            "target": "[Vertex AI] Modelo RAG & Asistente Inteligente",
+            "type": "Generative AI Agent",
+            "purpose": "Contexto Enriquecido con Filtro PII Auditado"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `clientes` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "certified_by": "Javier Mendoza (Data Architect) & Lucía Morales (Data Steward)",
+        "certified_date": "2026-07-31",
+        "compliance_status": "Certificado para RAG e IA",
+        "notes": "Indexado en Knowledge Catalog vía Conector MySQL (50 filas reales)."
+      },
+      "tag_templates": {
+        "data_governance_core": {
+          "template_id": "data_governance_core",
+          "template_name": "Plantilla de Gobernanza de Datos (Core)",
+          "fields": {
+            "data_steward": "Lucía Morales (Lead Data Steward)",
+            "data_domain": "clientes",
+            "confidentiality_level": "Confidencial PII",
+            "retention_policy_months": 36,
+            "golden_source": "MySQL Aiven Cloud (mysql-1c645071-google-beed.j.aivencloud.com:10283)",
+            "ai_certified": true
+          },
+          "last_updated": "2026-07-31 12:35 UTC"
+        },
+        "sdp_security_classification": {
+          "template_id": "sdp_security_classification",
+          "template_name": "Plantilla de Seguridad & SDP (Sensitive Data Protection)",
+          "fields": {
+            "infotypes_detected": "LOCATION_GEO, PERSON_NAME",
+            "dlp_risk_level": "Medio",
+            "dynamic_masking_enabled": true,
+            "policy_tag_taxonomy": "Taxonomy_PII_Confidential",
+            "last_scan_date": "2026-07-31 04:04 UTC"
+          },
+          "last_updated": "2026-07-31 12:35 UTC"
+        },
+        "dataplex_quality_slas": {
+          "template_id": "dataplex_quality_slas",
+          "template_name": "Plantilla de Calidad Dataplex & SLAs",
+          "fields": {
+            "quality_score": 100,
+            "freshness_hours": 1,
+            "rules_status": "5 de 5 reglas aprobadas (100%)"
+          },
+          "last_updated": "2026-07-31 12:35 UTC"
+        }
+      }
+    },
+    {
+      "id": "ext_mysql_bdcomercial_detalles_ventas",
+      "name": "MYSQL Detalles ventas",
+      "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+      "service": "Aiven Cloud MySQL Engine",
+      "project_or_db": "mysql-1c645071-google-beed.j.aivencloud.com:10283",
+      "dataset": "bdcomercial",
+      "table_name": "detalles_ventas",
+      "domain": "ventas",
+      "steward": "Lucía Morales (Data Steward)",
+      "storage_format": "MySQL 8.0 InnoDB",
+      "row_count": 232,
+      "columns_count": 4,
+      "description": "Tabla `detalles_ventas` descubierta en vivo desde MySQL `bdcomercial` con 232 registros y 4 columnas indexadas.",
+      "columns": [
+        {
+          "name": "detalle_id",
+          "type": "BIGINT",
+          "description": "Columna detalle_id extraída de MySQL `bdcomercial.detalles_ventas` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "venta_id",
+          "type": "BIGINT",
+          "description": "Columna venta_id extraída de MySQL `bdcomercial.detalles_ventas` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "producto_id",
+          "type": "BIGINT",
+          "description": "Columna producto_id extraída de MySQL `bdcomercial.detalles_ventas` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "cantidad",
+          "type": "BIGINT",
+          "description": "Columna cantidad extraída de MySQL `bdcomercial.detalles_ventas` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Bajo",
+        "info_types_found": [],
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 100.0,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "rules_passed": 5,
+        "total_rules": 5,
+        "status": "PASSED"
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Aiven Cloud] MySQL Cluster Online (mysql-1c645071-google-beed.j.aivencloud.com:10283/bdcomercial)",
+            "type": "OLTP Database / MySQL InnoDb",
+            "transformation": "Conexión JDBC / TLS SSL Live Sync"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] Lakehouse Replicated Zone (`corp-analytics-prod.raw_zone.mysql_detalles_ventas_sync`)",
+            "type": "Federated Query / BigLake",
+            "purpose": "Replicación Diaria para Gobierno Centralizado"
+          },
+          {
+            "target": "[Looker Studio] Tablero Comercial Detalles ventas",
+            "type": "Executive BI Dashboard",
+            "purpose": "Monitoreo Operativo en Tiempo Real"
+          },
+          {
+            "target": "[Vertex AI] Modelo RAG & Asistente Inteligente",
+            "type": "Generative AI Agent",
+            "purpose": "Contexto Enriquecido con Filtro PII Auditado"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `detalles_ventas` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "certified_by": "Javier Mendoza (Data Architect) & Lucía Morales (Data Steward)",
+        "certified_date": "2026-07-31",
+        "compliance_status": "Certificado para RAG e IA",
+        "notes": "Indexado en Knowledge Catalog vía Conector MySQL (232 filas reales)."
+      }
+    },
+    {
+      "id": "ext_mysql_bdcomercial_productos",
+      "name": "MYSQL Productos",
+      "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+      "service": "Aiven Cloud MySQL Engine",
+      "project_or_db": "mysql-1c645071-google-beed.j.aivencloud.com:10283",
+      "dataset": "bdcomercial",
+      "table_name": "productos",
+      "domain": "operaciones",
+      "steward": "Lucía Morales (Data Steward)",
+      "storage_format": "MySQL 8.0 InnoDB",
+      "row_count": 20,
+      "columns_count": 4,
+      "description": "Tabla `productos` descubierta en vivo desde MySQL `bdcomercial` con 20 registros y 4 columnas indexadas.",
+      "columns": [
+        {
+          "name": "producto_id",
+          "type": "BIGINT",
+          "description": "Columna producto_id extraída de MySQL `bdcomercial.productos` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "nombre_producto",
+          "type": "TEXT",
+          "description": "Columna nombre_producto extraída de MySQL `bdcomercial.productos` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "categoria",
+          "type": "TEXT",
+          "description": "Columna categoria extraída de MySQL `bdcomercial.productos` (TEXT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "precio_unitario",
+          "type": "DOUBLE",
+          "description": "Columna precio_unitario extraída de MySQL `bdcomercial.productos` (DOUBLE)",
+          "is_pii": false,
+          "dlp_info_type": "FINANCIAL_NUMERIC",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Medio",
+        "info_types_found": [
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-31 04:09 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 98.8,
+        "passed_rules": 5,
+        "failed_rules": 0,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "rule_results": [
+          {
+            "rule": "Completeness",
+            "status": "PASSED",
+            "details": "100% de registros válidos (20 filas)"
+          },
+          {
+            "rule": "Primary Key Integrity",
+            "status": "PASSED",
+            "details": "Claves primarias sin valores nulos ni duplicados"
+          },
+          {
+            "rule": "PII Masking Enforcement",
+            "status": "PASSED",
+            "details": "Policy Tags aplicadas a campos PII"
+          },
+          {
+            "rule": "Data Type Validation",
+            "status": "PASSED",
+            "details": "4 columnas conformes con esquema ANSI"
+          }
+        ]
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Aiven Cloud] MySQL Cluster Online (mysql-1c645071-google-beed.j.aivencloud.com:10283/bdcomercial)",
+            "type": "OLTP Database / MySQL InnoDb",
+            "transformation": "Conexión JDBC / TLS SSL Live Sync"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] Lakehouse Replicated Zone (`corp-analytics-prod.raw_zone.mysql_productos_sync`)",
+            "type": "Federated Query / BigLake",
+            "purpose": "Replicación Diaria para Gobierno Centralizado"
+          },
+          {
+            "target": "[Looker Studio] Tablero Comercial Productos",
+            "type": "Executive BI Dashboard",
+            "purpose": "Monitoreo Operativo en Tiempo Real"
+          },
+          {
+            "target": "[Vertex AI] Modelo RAG & Asistente Inteligente",
+            "type": "Generative AI Agent",
+            "purpose": "Contexto Enriquecido con Filtro PII Auditado"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `productos` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "certified_by": "Javier Mendoza (Data Architect) & Lucía Morales (Data Steward)",
+        "certified_date": "2026-07-31",
+        "compliance_status": "Compliant (Masked & Governed)",
+        "notes": "Dataset protegido con Policy Tags de BigQuery y Dynamic Masking. Apto para IA."
+      }
+    },
+    {
+      "id": "ext_mysql_bdcomercial_resumen_comercial_consolidado",
+      "name": "MYSQL Resumen comercial consolidado",
+      "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+      "service": "Aiven Cloud MySQL Engine",
+      "project_or_db": "mysql-1c645071-google-beed.j.aivencloud.com:10283",
+      "dataset": "bdcomercial",
+      "table_name": "resumen_comercial_consolidado",
+      "domain": "ventas",
+      "steward": "Lucía Morales (Data Steward)",
+      "storage_format": "MySQL 8.0 InnoDB",
+      "row_count": 232,
+      "columns_count": 16,
+      "description": "Tabla `resumen_comercial_consolidado` descubierta en vivo desde MySQL `bdcomercial` con 232 registros y 16 columnas indexadas.",
+      "columns": [
+        {
+          "name": "venta_id",
+          "type": "BIGINT",
+          "description": "Columna venta_id extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha",
+          "type": "DATETIME",
+          "description": "Columna fecha extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (DATETIME)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "año_mes",
+          "type": "TEXT",
+          "description": "Columna año_mes extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "nombre_cliente",
+          "type": "TEXT",
+          "description": "Columna nombre_cliente extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "ciudad",
+          "type": "TEXT",
+          "description": "Columna ciudad extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": "Taxonomy_Location_Restricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "segmento",
+          "type": "TEXT",
+          "description": "Columna segmento extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "nombre_producto",
+          "type": "TEXT",
+          "description": "Columna nombre_producto extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "categoria",
+          "type": "TEXT",
+          "description": "Columna categoria extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "precio_unitario",
+          "type": "DOUBLE",
+          "description": "Columna precio_unitario extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (DOUBLE)",
+          "is_pii": false,
+          "dlp_info_type": "FINANCIAL_NUMERIC",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "cantidad",
+          "type": "BIGINT",
+          "description": "Columna cantidad extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "subtotal",
+          "type": "DOUBLE",
+          "description": "Columna subtotal extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (DOUBLE)",
+          "is_pii": false,
+          "dlp_info_type": "FINANCIAL_NUMERIC",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "impuesto",
+          "type": "DOUBLE",
+          "description": "Columna impuesto extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (DOUBLE)",
+          "is_pii": false,
+          "dlp_info_type": "FINANCIAL_NUMERIC",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "total_venta",
+          "type": "DOUBLE",
+          "description": "Columna total_venta extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (DOUBLE)",
+          "is_pii": false,
+          "dlp_info_type": "FINANCIAL_NUMERIC",
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "nombre_vendedor",
+          "type": "TEXT",
+          "description": "Columna nombre_vendedor extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "region",
+          "type": "TEXT",
+          "description": "Columna region extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": "Taxonomy_Location_Restricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "comision_vendedor",
+          "type": "DOUBLE",
+          "description": "Columna comision_vendedor extraída de MySQL `bdcomercial.resumen_comercial_consolidado` (DOUBLE)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Medio",
+        "info_types_found": [
+          "PERSON_NAME",
+          "LOCATION_GEO",
+          "PERSON_NAME",
+          "PERSON_NAME",
+          "LOCATION_GEO",
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 98.8,
+        "passed_rules": 5,
+        "failed_rules": 0,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "rule_results": [
+          {
+            "rule": "Completeness",
+            "status": "PASSED",
+            "details": "100% de registros válidos (232 filas)"
+          },
+          {
+            "rule": "Primary Key Integrity",
+            "status": "PASSED",
+            "details": "Claves primarias sin valores nulos ni duplicados"
+          },
+          {
+            "rule": "PII Masking Enforcement",
+            "status": "PASSED",
+            "details": "Policy Tags aplicadas a campos PII"
+          },
+          {
+            "rule": "Data Type Validation",
+            "status": "PASSED",
+            "details": "16 columnas conformes con esquema ANSI"
+          }
+        ]
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Aiven Cloud] MySQL Cluster Online (mysql-1c645071-google-beed.j.aivencloud.com:10283/bdcomercial)",
+            "type": "OLTP Database / MySQL InnoDb",
+            "transformation": "Conexión JDBC / TLS SSL Live Sync"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] Lakehouse Replicated Zone (`corp-analytics-prod.raw_zone.mysql_resumen_comercial_consolidado_sync`)",
+            "type": "Federated Query / BigLake",
+            "purpose": "Replicación Diaria para Gobierno Centralizado"
+          },
+          {
+            "target": "[Looker Studio] Tablero Comercial Resumen comercial consolidado",
+            "type": "Executive BI Dashboard",
+            "purpose": "Monitoreo Operativo en Tiempo Real"
+          },
+          {
+            "target": "[Vertex AI] Modelo RAG & Asistente Inteligente",
+            "type": "Generative AI Agent",
+            "purpose": "Contexto Enriquecido con Filtro PII Auditado"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `resumen_comercial_consolidado` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "certified_by": "Javier Mendoza (Data Architect) & Lucía Morales (Data Steward)",
+        "certified_date": "2026-07-31",
+        "compliance_status": "Certificado para RAG e IA",
+        "notes": "Indexado en Knowledge Catalog vía Conector MySQL (232 filas reales)."
+      },
+      "tag_templates": {
+        "data_governance_core": {
+          "template_id": "data_governance_core",
+          "template_name": "Plantilla de Gobernanza de Datos (Core)",
+          "fields": {
+            "data_steward": "Lucía Morales (Data Steward)",
+            "data_domain": "ventas",
+            "confidentiality_level": "Confidencial PII",
+            "retention_policy_months": 24,
+            "golden_source": "MySQL Aiven Cloud (mysql-1c645071-google-beed.j.aivencloud.com:10283)",
+            "ai_certified": true
+          },
+          "last_updated": "2026-07-31 04:19 UTC"
+        },
+        "sdp_security_classification": {
+          "template_id": "sdp_security_classification",
+          "template_name": "Plantilla de Seguridad & SDP (Sensitive Data Protection)",
+          "fields": {
+            "infotypes_detected": "FINANCIAL_NUMERIC, LOCATION_GEO, PERSON_NAME",
+            "dlp_risk_level": "Medio",
+            "dynamic_masking_enabled": true,
+            "policy_tag_taxonomy": "Taxonomy_PII_Confidential",
+            "last_scan_date": "2026-07-31 04:04 UTC"
+          },
+          "last_updated": "2026-07-31 04:19 UTC"
+        },
+        "dataplex_quality_slas": {
+          "template_id": "dataplex_quality_slas",
+          "template_name": "Plantilla de Calidad Dataplex & SLAs",
+          "fields": {
+            "quality_score": 98.8,
+            "freshness_hours": 1,
+            "rules_status": "5 de 5 reglas aprobadas (100%)"
+          },
+          "last_updated": "2026-07-31 04:19 UTC"
+        }
+      }
+    },
+    {
+      "id": "ext_mysql_bdcomercial_vendedores",
+      "name": "MYSQL Vendedores",
+      "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+      "service": "Aiven Cloud MySQL Engine",
+      "project_or_db": "mysql-1c645071-google-beed.j.aivencloud.com:10283",
+      "dataset": "bdcomercial",
+      "table_name": "vendedores",
+      "domain": "finanzas",
+      "steward": "Lucía Morales (Data Steward)",
+      "storage_format": "MySQL 8.0 InnoDB",
+      "row_count": 10,
+      "columns_count": 3,
+      "description": "Tabla `vendedores` descubierta en vivo desde MySQL `bdcomercial` con 10 registros y 3 columnas indexadas.",
+      "columns": [
+        {
+          "name": "vendedor_id",
+          "type": "BIGINT",
+          "description": "Columna vendedor_id extraída de MySQL `bdcomercial.vendedores` (BIGINT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "nombre_vendedor",
+          "type": "TEXT",
+          "description": "Columna nombre_vendedor extraída de MySQL `bdcomercial.vendedores` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "region",
+          "type": "TEXT",
+          "description": "Columna region extraída de MySQL `bdcomercial.vendedores` (TEXT)",
+          "is_pii": true,
+          "dlp_info_type": "LOCATION_GEO",
+          "policy_tag": "Taxonomy_Location_Restricted",
+          "masked": true,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Medio",
+        "info_types_found": [
+          "PERSON_NAME",
+          "PERSON_NAME",
+          "LOCATION_GEO"
+        ],
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 98.8,
+        "passed_rules": 5,
+        "failed_rules": 0,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "rule_results": [
+          {
+            "rule": "Completeness",
+            "status": "PASSED",
+            "details": "100% de registros válidos (10 filas)"
+          },
+          {
+            "rule": "Primary Key Integrity",
+            "status": "PASSED",
+            "details": "Claves primarias sin valores nulos ni duplicados"
+          },
+          {
+            "rule": "PII Masking Enforcement",
+            "status": "PASSED",
+            "details": "Policy Tags aplicadas a campos PII"
+          },
+          {
+            "rule": "Data Type Validation",
+            "status": "PASSED",
+            "details": "3 columnas conformes con esquema ANSI"
+          }
+        ]
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Aiven Cloud] MySQL Cluster Online (mysql-1c645071-google-beed.j.aivencloud.com:10283/bdcomercial)",
+            "type": "OLTP Database / MySQL InnoDb",
+            "transformation": "Conexión JDBC / TLS SSL Live Sync"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] Lakehouse Replicated Zone (`corp-analytics-prod.raw_zone.mysql_vendedores_sync`)",
+            "type": "Federated Query / BigLake",
+            "purpose": "Replicación Diaria para Gobierno Centralizado"
+          },
+          {
+            "target": "[Looker Studio] Tablero Comercial Vendedores",
+            "type": "Executive BI Dashboard",
+            "purpose": "Monitoreo Operativo en Tiempo Real"
+          },
+          {
+            "target": "[Vertex AI] Modelo RAG & Asistente Inteligente",
+            "type": "Generative AI Agent",
+            "purpose": "Contexto Enriquecido con Filtro PII Auditado"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `vendedores` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "certified_by": "Javier Mendoza (Data Architect) & Lucía Morales (Data Steward)",
+        "certified_date": "2026-07-31",
+        "compliance_status": "Certificado para RAG e IA",
+        "notes": "Indexado en Knowledge Catalog vía Conector MySQL (10 filas reales)."
+      }
+    },
+    {
+      "id": "ext_mysql_bdcomercial_ventas",
+      "name": "MYSQL Ventas",
+      "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+      "service": "Aiven Cloud MySQL Engine",
+      "project_or_db": "mysql-1c645071-google-beed.j.aivencloud.com:10283",
+      "dataset": "bdcomercial",
+      "table_name": "ventas",
+      "domain": "ventas",
+      "steward": "Lucía Morales (Data Steward)",
+      "storage_format": "MySQL 8.0 InnoDB",
+      "row_count": 100,
+      "columns_count": 4,
+      "description": "Tabla `ventas` descubierta en vivo desde MySQL `bdcomercial` con 100 registros y 4 columnas indexadas.",
+      "columns": [
+        {
+          "name": "venta_id",
+          "type": "BIGINT",
+          "description": "Columna venta_id extraída de MySQL `bdcomercial.ventas` (BIGINT)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "fecha",
+          "type": "DATETIME",
+          "description": "Columna fecha extraída de MySQL `bdcomercial.ventas` (DATETIME)",
+          "is_pii": false,
+          "dlp_info_type": null,
+          "policy_tag": null,
+          "masked": false,
+          "is_primary_key": false,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "cliente_id",
+          "type": "BIGINT",
+          "description": "Columna cliente_id extraída de MySQL `bdcomercial.ventas` (BIGINT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        },
+        {
+          "name": "vendedor_id",
+          "type": "BIGINT",
+          "description": "Columna vendedor_id extraída de MySQL `bdcomercial.ventas` (BIGINT)",
+          "is_pii": true,
+          "dlp_info_type": "PERSON_NAME",
+          "policy_tag": "Taxonomy_PII_Confidential",
+          "masked": true,
+          "is_primary_key": true,
+          "null_percentage": 0.0
+        }
+      ],
+      "dlp_status": {
+        "scanned": true,
+        "risk_level": "Medio",
+        "info_types_found": [
+          "PERSON_NAME",
+          "PERSON_NAME"
+        ],
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "policy_tags_applied": true,
+        "dynamic_masking_enabled": true
+      },
+      "dataplex_quality": {
+        "overall_score": 98.8,
+        "passed_rules": 5,
+        "failed_rules": 0,
+        "freshness_hours": 1,
+        "null_rate_pct": 0.0,
+        "duplicate_rate_pct": 0.0,
+        "anomaly_count": 0,
+        "last_scan_date": "2026-07-31 04:04 UTC",
+        "rule_results": [
+          {
+            "rule": "Completeness",
+            "status": "PASSED",
+            "details": "100% de registros válidos (100 filas)"
+          },
+          {
+            "rule": "Primary Key Integrity",
+            "status": "PASSED",
+            "details": "Claves primarias sin valores nulos ni duplicados"
+          },
+          {
+            "rule": "PII Masking Enforcement",
+            "status": "PASSED",
+            "details": "Policy Tags aplicadas a campos PII"
+          },
+          {
+            "rule": "Data Type Validation",
+            "status": "PASSED",
+            "details": "4 columnas conformes con esquema ANSI"
+          }
+        ]
+      },
+      "lineage": {
+        "upstream": [
+          {
+            "source": "[Aiven Cloud] MySQL Cluster Online (mysql-1c645071-google-beed.j.aivencloud.com:10283/bdcomercial)",
+            "type": "OLTP Database / MySQL InnoDb",
+            "transformation": "Conexión JDBC / TLS SSL Live Sync"
+          }
+        ],
+        "downstream": [
+          {
+            "target": "[GCP / BigQuery] Lakehouse Replicated Zone (`corp-analytics-prod.raw_zone.mysql_ventas_sync`)",
+            "type": "Federated Query / BigLake",
+            "purpose": "Replicación Diaria para Gobierno Centralizado"
+          },
+          {
+            "target": "[Looker Studio] Tablero Comercial Ventas",
+            "type": "Executive BI Dashboard",
+            "purpose": "Monitoreo Operativo en Tiempo Real"
+          },
+          {
+            "target": "[Vertex AI] Modelo RAG & Asistente Inteligente",
+            "type": "Generative AI Agent",
+            "purpose": "Contexto Enriquecido con Filtro PII Auditado"
+          }
+        ]
+      },
+      "golden_query": "SELECT * FROM `ventas` LIMIT 100;",
+      "ai_readiness": {
+        "certified_for_rag": true,
+        "certified_by": "Javier Mendoza (Data Architect) & Lucía Morales (Data Steward)",
+        "certified_date": "2026-07-31",
+        "compliance_status": "Certificado para RAG e IA",
+        "notes": "Indexado en Knowledge Catalog vía Conector MySQL (100 filas reales)."
+      },
+      "tag_templates": {
+        "data_governance_core": {
+          "template_id": "data_governance_core",
+          "template_name": "Plantilla de Gobernanza de Datos (Core)",
+          "fields": {
+            "data_steward": "Lucía Morales (Data Steward)",
+            "data_domain": "ventas",
+            "confidentiality_level": "Confidencial PII",
+            "retention_policy_months": 24,
+            "golden_source": "MySQL Aiven Cloud (mysql-1c645071-google-beed.j.aivencloud.com:10283)",
+            "ai_certified": true
+          },
+          "last_updated": "2026-07-31 04:34 UTC"
+        },
+        "sdp_security_classification": {
+          "template_id": "sdp_security_classification",
+          "template_name": "Plantilla de Seguridad & SDP (Sensitive Data Protection)",
+          "fields": {
+            "infotypes_detected": "PERSON_NAME",
+            "dlp_risk_level": "Medio",
+            "dynamic_masking_enabled": true,
+            "policy_tag_taxonomy": "Taxonomy_PII_Confidential",
+            "last_scan_date": "2026-07-31 04:04 UTC"
+          },
+          "last_updated": "2026-07-31 04:34 UTC"
+        },
+        "dataplex_quality_slas": {
+          "template_id": "dataplex_quality_slas",
+          "template_name": "Plantilla de Calidad Dataplex & SLAs",
+          "fields": {
+            "quality_score": 98.8,
+            "freshness_hours": 1,
+            "rules_status": "5 de 5 reglas aprobadas (100%)"
+          },
+          "last_updated": "2026-07-31 04:34 UTC"
+        }
+      }
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Golden Query",
+      "definition": "Consulta SQL optimizada, pre-aprobada por Data Stewards y auditada en términos de seguridad para extraer métricas oficiales sin riesgos de degradación o fuga de datos sensibles.",
+      "domain": "Gobierno Global",
+      "approved_by": "Comité de Gobierno de Datos"
+    },
+    {
+      "term": "PII (Personally Identifiable Information)",
+      "definition": "Cualquier dato que pueda identificar directa o indirectamente a una persona física (nombres, correos, teléfonos, identificaciones oficiales).",
+      "domain": "Seguridad y Privacidad",
+      "approved_by": "Oficina de Cumplimiento (DPO)"
+    },
+    {
+      "term": "Dynamic Data Masking (DDM)",
+      "definition": "Mecanismo de seguridad que ofusca en tiempo de ejecución datos sensibles ante usuarios no autorizados sin alterar el dato físico subyacente.",
+      "domain": "Seguridad de Datos",
+      "approved_by": "Seguridad Cloud"
+    },
+    {
+      "term": "Data Steward",
+      "definition": "Responsable funcional y operativo asignado a un dominio de datos, encargado de la calidad, documentación, reglas de negocio y ciclo de vida de los metadatos.",
+      "domain": "Organización",
+      "approved_by": "CDO Office"
+    },
+    {
+      "term": "Dataplex Quality Score",
+      "definition": "Indicador porcentual ponderado que evalúa completitud, unicidad, frescura, validez de esquemas y conformidad con reglas de negocio automáticas.",
+      "domain": "Calidad de Datos",
+      "approved_by": "Data Engineering"
+    }
+  ]
+}

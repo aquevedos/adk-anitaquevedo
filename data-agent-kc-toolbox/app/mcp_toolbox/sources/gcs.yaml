@@ -1,0 +1,33 @@
+# Cloud Storage source. Project comes from PROJECT_ID env var.
+# Read-only by default; write tools (upload, write, delete) intentionally omitted —
+# to enable, add them here and update the manifest iam_roles to storage.objectUser.
+
+kind: source
+name: cloud-storage-source
+type: cloud-storage
+project: ${PROJECT_ID}
+---
+kind: tool
+name: gcs_list_buckets
+type: cloud-storage-list-buckets
+source: cloud-storage-source
+description: List Cloud Storage buckets in the project.
+---
+kind: tool
+name: gcs_list_objects
+type: cloud-storage-list-objects
+source: cloud-storage-source
+description: List objects in a Cloud Storage bucket, with optional prefix and delimiter filtering.
+---
+kind: tool
+name: gcs_read_object
+type: cloud-storage-read-object
+source: cloud-storage-source
+description: Read a UTF-8 text object from Cloud Storage (max 8 MiB). Use for config files, manifests, small CSVs.
+---
+kind: toolset
+name: gcs
+tools:
+  - gcs_list_buckets
+  - gcs_list_objects
+  - gcs_read_object

@@ -1,0 +1,165 @@
+{
+  "profiles": [
+    {
+      "id": "estratega_ejecutivo",
+      "name": "El Estratega Ejecutivo",
+      "user_name": "Elena Rostova (CDO)",
+      "email": "cdo@empresa.com",
+      "password": "123",
+      "role": "CDO / Consultor de Negocio",
+      "avatar": "👔",
+      "theme_pastel": {
+        "bg_soft": "#f5f3ff",
+        "badge_bg": "#ede9fe",
+        "accent": "#8b5cf6",
+        "text": "#5b21b6"
+      },
+      "mission": "Alinear los datos con el dinero, el ROI y los objetivos estratégicos de la empresa.",
+      "skills": [
+        "Lenguaje de negocio y visión C-Level",
+        "Cálculo de Retorno de Inversión (ROI) y Monetización",
+        "Estrategia de Gobierno y Mitigación de Riesgos",
+        "Priorización por Impacto Financiero"
+      ],
+      "utility": "Diseñado para dialogar con Gerentes Generales, Directores y CFOs.",
+      "assigned_tabs": [
+        "chat-tab",
+        "executive-tab",
+        "catalog-tab"
+      ],
+      "raci_roles": {
+        "Definición de Estrategia de Datos": "Accountable (A)",
+        "Aprobación de Presupuesto": "Accountable (A)",
+        "Comité de Gobierno Ejecutivo": "Responsible (R)"
+      },
+      "quick_prompts": [
+        "¿Cuál es el impacto financiero y ROI de gobernar dim_clientes_360?",
+        "Presenta una propuesta ejecutiva de gobierno de datos para el Directorio",
+        "¿Cómo reduce costos operativos mejorar la calidad con Dataplex a >95%?",
+        "Estrategia de adopción de IA generativa segura para el CDO"
+      ]
+    },
+    {
+      "id": "gestor_programa",
+      "name": "El Gestor del Programa",
+      "user_name": "Mateo Valdivia (Agile Governance Lead)",
+      "email": "governance@empresa.com",
+      "password": "123",
+      "role": "Data Governance Manager / Agile Lead",
+      "avatar": "📋",
+      "theme_pastel": {
+        "bg_soft": "#fdf2f8",
+        "badge_bg": "#fce7f3",
+        "accent": "#ec4899",
+        "text": "#9d174d"
+      },
+      "mission": "Diseñar la estructura organizacional, comités, políticas y matrices RACI.",
+      "skills": [
+        "Frameworks y Metodologías Ágiles de Gobierno (DMBOK)",
+        "Diagnóstico de Madurez de Gobierno de Datos (DMM)",
+        "Diseño de Matrices RACI y Comités de Decisión",
+        "Priorización de Proyectos por Sprints"
+      ],
+      "utility": "Diagnostica la madurez de cualquier empresa y arma un plan paso a paso.",
+      "assigned_tabs": [
+        "chat-tab",
+        "maturity-tab",
+        "catalog-tab",
+        "stewards-tab"
+      ],
+      "raci_roles": {
+        "Diseño de Políticas de Gobierno": "Responsible (R)",
+        "Gestión de la Matriz RACI": "Accountable (A)",
+        "Facilitación de Comités de Dominio": "Responsible (R)"
+      },
+      "quick_prompts": [
+        "Genera una matriz RACI para la administración de clientes en BigQuery",
+        "Realiza un diagnóstico de madurez de gobierno para nuestra empresa",
+        "Planifica un Roadmap de 3 Sprints para implementar Dataplex y DLP",
+        "Estructura del Comité de Gobierno de Datos y roles necesarios"
+      ]
+    },
+    {
+      "id": "guardian_dato",
+      "name": "El Guardián del Dato",
+      "user_name": "Lucía Morales (Senior Data Steward)",
+      "email": "steward@empresa.com",
+      "password": "123",
+      "role": "Data Steward / Data Quality Specialist / DPO",
+      "avatar": "🛡️",
+      "theme_pastel": {
+        "bg_soft": "#ecfdf5",
+        "badge_bg": "#d1fae5",
+        "accent": "#10b981",
+        "text": "#065f46"
+      },
+      "mission": "Definir las reglas de calidad, diccionarios, metadatos y cumplimiento legal (DPO).",
+      "skills": [
+        "Creación de Glosarios de Negocio Oficiales",
+        "Definición y Auditoría de Calidad con Dataplex",
+        "Cumplimiento de Privacidad (Cloud DLP / PII)",
+        "Certificación de Datasets para IA / RAG"
+      ],
+      "utility": "Audita la información del día a día y asegura calidad y privacidad.",
+      "assigned_tabs": [
+        "chat-tab",
+        "quality-tab",
+        "dlp-tab",
+        "catalog-tab",
+        "stewards-tab"
+      ],
+      "raci_roles": {
+        "Supervisión de Calidad del Dato": "Responsible (R)",
+        "Aprobación de Términos en Glosario": "Accountable (A)",
+        "Auditoría de Enmascaramiento PII": "Responsible (R)"
+      },
+      "quick_prompts": [
+        "Audita la calidad y nulos de la tabla dim_clientes_360 con Dataplex",
+        "Identifica campos PII expuestos y sugiere reglas de Dynamic Data Masking",
+        "Define el término 'Cliente Activo' en el Glosario de Negocio",
+        "Verifica si el dataset cumple con las reglas para ser certificado para RAG"
+      ]
+    },
+    {
+      "id": "arquitecto_ingeniero",
+      "name": "El Arquitecto e Ingeniero",
+      "user_name": "Javier Mendoza (Lead Data Architect)",
+      "email": "architect@empresa.com",
+      "password": "123",
+      "role": "Data Architect / Engineer / Custodian",
+      "avatar": "⚙️",
+      "theme_pastel": {
+        "bg_soft": "#f0f9ff",
+        "badge_bg": "#e0f2fe",
+        "accent": "#0ea5e9",
+        "text": "#0369a1"
+      },
+      "mission": "Diseñar la infraestructura técnica, el linaje de datos y la seguridad.",
+      "skills": [
+        "Arquitecturas Modernas (Data Mesh, Lakehouse)",
+        "Trazabilidad y Linaje de Datos End-to-End",
+        "Optimización de SQL y Golden Queries",
+        "Conectividad Híbrida Multi-Cloud (GCP, AWS, Azure, On-Prem)"
+      ],
+      "utility": "Resuelve el 'cómo técnico' y guía a los equipos de TI.",
+      "assigned_tabs": [
+        "chat-tab",
+        "lineage-tab",
+        "connectors-tab",
+        "catalog-tab"
+      ],
+      "raci_roles": {
+        "Implementación de Infraestructura y Pipelines": "Responsible (R)",
+        "Configuración de Conectores Multi-Cloud": "Accountable (A)",
+        "Mapeo de Linaje y Dependencias": "Responsible (R)"
+      },
+      "quick_prompts": [
+        "Analiza la arquitectura y calidad de la tabla MySQL resumen_comercial_consolidado",
+        "Muestra el grafo de linaje y analiza el impacto de la tabla ventas en MySQL (bdcomercial)",
+        "Genera una Golden Query optimizada con enmascaramiento para la tabla clientes de MySQL",
+        "¿Cómo está configurada la conexión federada con MySQL (Aiven Cloud) en Knowledge Catalog?"
+      ]
+    }
+  ],
+  "active_profile_id": "gestor_programa"
+}

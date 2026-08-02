@@ -1,0 +1,1659 @@
+{
+  "discovery": {
+    "summary": {
+      "total_tables_profiled": 32,
+      "high_sensitivity_count": 4,
+      "moderate_sensitivity_count": 20,
+      "low_sensitivity_count": 8,
+      "high_risk_count": 3,
+      "moderate_risk_count": 21,
+      "low_risk_count": 8,
+      "total_infotypes_detected": 8,
+      "unique_infotypes_list": [
+        "CREDIT_CARD_NUMBER",
+        "EMAIL_ADDRESS",
+        "IBAN_BANK_ACCOUNT",
+        "IP_ADDRESS",
+        "LOCATION_GEO",
+        "PERSON_NAME",
+        "PHONE_NUMBER",
+        "TAX_ID_RFC_SSN"
+      ],
+      "last_global_scan": "2026-07-31 16:03 UTC"
+    },
+    "profiles": [
+      {
+        "id": "prof_gcp_bq_customers_360",
+        "asset_id": "gcp_bq_customers_360",
+        "name": "Clientes 360 Maestro",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "corp-analytics-prod.marketing_governance.dim_clientes_360",
+        "sensitivity_level": "HIGH",
+        "data_risk_level": "HIGH",
+        "predicted_infotypes": [
+          "CREDIT_CARD_NUMBER",
+          "EMAIL_ADDRESS",
+          "PERSON_NAME",
+          "PHONE_NUMBER"
+        ],
+        "columns_total": 7,
+        "sensitive_columns_count": 4,
+        "free_text_risk": "LOW",
+        "encryption_type": "Customer-Managed Key (CMEK) via Cloud KMS",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Aplicar Dynamic Data Masking obligatorio y monitoreo con Job Triggers."
+      },
+      {
+        "id": "prof_bq_transactions_fact",
+        "asset_id": "gcp_bq_fact_ventas_pos",
+        "name": "Fact Ventas POS Omnicanal",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "corp-analytics-prod.sales_dw.fact_ventas_pos",
+        "sensitivity_level": "HIGH",
+        "data_risk_level": "HIGH",
+        "predicted_infotypes": [
+          "CREDIT_CARD_NUMBER",
+          "IBAN_BANK_ACCOUNT",
+          "TAX_ID_RFC_SSN"
+        ],
+        "columns_total": 12,
+        "sensitive_columns_count": 3,
+        "free_text_risk": "LOW",
+        "encryption_type": "Customer-Managed Key (CMEK) via Cloud KMS",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 08:30 UTC",
+        "recommendation": "Verificar cumplimiento PCI-DSS y configurar Job Trigger de inspección diaria."
+      },
+      {
+        "id": "prof_gcp_bq_financial_ledger",
+        "asset_id": "gcp_bq_financial_ledger",
+        "name": "Libro Mayor Contable y Facturación",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "corp-finance-secure.accounting_ledger.gl_journal_entries",
+        "sensitivity_level": "HIGH",
+        "data_risk_level": "HIGH",
+        "predicted_infotypes": [
+          "IBAN_BANK_ACCOUNT"
+        ],
+        "columns_total": 5,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Customer-Managed Key (CMEK) via Cloud KMS",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Aplicar Dynamic Data Masking obligatorio y monitoreo con Job Triggers."
+      },
+      {
+        "id": "prof_gcs_raw_landing",
+        "asset_id": "gcp_gcs_raw_landing_lake",
+        "name": "Landing Zone de Archivos CSV/JSON",
+        "cloud": "GCP",
+        "service": "Cloud Storage",
+        "resource_location": "gs://corp-data-lake-landing-us-central1/raw_ingestion/",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "EMAIL_ADDRESS",
+          "PERSON_NAME",
+          "IP_ADDRESS"
+        ],
+        "columns_total": 5,
+        "sensitive_columns_count": 3,
+        "free_text_risk": "HIGH",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 06:00 UTC",
+        "recommendation": "Configurar trigger de inspección automática en subida de objetos GCS."
+      },
+      {
+        "id": "prof_mysql_commercial",
+        "asset_id": "mysql_aiven_resumen_comercial",
+        "name": "Resumen Comercial MySQL Aiven",
+        "cloud": "MySQL (Online Aiven)",
+        "service": "MySQL Database",
+        "resource_location": "defaultdb.resumen_comercial_consolidado",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME",
+          "EMAIL_ADDRESS"
+        ],
+        "columns_total": 8,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "TLS/SSL in transit",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 07:45 UTC",
+        "recommendation": "Sincronizar catálogo federado y aplicar reglas de enmascaramiento antes de replicación."
+      },
+      {
+        "id": "prof_azure_synapse_cust",
+        "asset_id": "azure_synapse_dim_customer",
+        "name": "Dim Customer Azure Synapse",
+        "cloud": "Azure",
+        "service": "Synapse Analytics",
+        "resource_location": "synapse-corp-dw.sales.dim_customer",
+        "sensitivity_level": "HIGH",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME",
+          "EMAIL_ADDRESS",
+          "PHONE_NUMBER"
+        ],
+        "columns_total": 10,
+        "sensitive_columns_count": 3,
+        "free_text_risk": "LOW",
+        "encryption_type": "Customer-Managed Key (CMEK) via Cloud KMS",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-30 19:10 UTC",
+        "recommendation": "Habilitar políticas de contenido SDP para alertas de transferencias no autorizadas."
+      },
+      {
+        "id": "prof_aws_redshift_clickstream",
+        "asset_id": "aws_redshift_clickstream",
+        "name": "Clickstream Web & App Events",
+        "cloud": "AWS",
+        "service": "Redshift",
+        "resource_location": "prod_cluster.analytics.events_log",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [
+          "IP_ADDRESS",
+          "LOCATION_GEO"
+        ],
+        "columns_total": 14,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "AWS KMS",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-29 14:00 UTC",
+        "recommendation": "Mantener retención de 90 días conforme a política de anonimización."
+      },
+      {
+        "id": "prof_bq_inventory_core",
+        "asset_id": "gcp_bq_inventory_stock",
+        "name": "Stock e Inventario Logística",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "corp-analytics-prod.logistics_dw.fact_inventory_daily",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 8,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 04:00 UTC",
+        "recommendation": "Activo sin PII. Certificado para uso general en analítica e IA."
+      },
+      {
+        "id": "prof_aws_redshift_orders_dw",
+        "asset_id": "aws_redshift_orders_dw",
+        "name": "Facturación y Órdenes Globales",
+        "cloud": "AWS",
+        "service": "Amazon Redshift",
+        "resource_location": "dw_enterprise_prod.sales_schema.fct_sales_orders",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "IP_ADDRESS",
+          "TAX_ID_RFC_SSN"
+        ],
+        "columns_total": 5,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_azure_synapse_crm_lake",
+        "asset_id": "azure_synapse_crm_lake",
+        "name": "Prospectos y Leads Omnicanal",
+        "cloud": "Azure",
+        "service": "Azure Synapse",
+        "resource_location": "synapse-enterprise-workspace.crm_curated.prospects_lake_v2",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "EMAIL_ADDRESS",
+          "PHONE_NUMBER"
+        ],
+        "columns_total": 4,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_onprem_pg_inventory_core",
+        "asset_id": "onprem_pg_inventory_core",
+        "name": "Inventario y Stock en Centros de Distribución",
+        "cloud": "On-Premises",
+        "service": "PostgreSQL Cluster",
+        "resource_location": "db_wms_logistics.public.tbl_inventario_bodegas",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 4,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Activo verificado sin PII detectable. Certificado para consumo general."
+      },
+      {
+        "id": "prof_gcp_bq_ecommerce_distribution_centers",
+        "asset_id": "gcp_bq_ecommerce_distribution_centers",
+        "name": "Distribution Centers (ecommerce)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.ecommerce.distribution_centers",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "LOCATION_GEO",
+          "PERSON_NAME"
+        ],
+        "columns_total": 5,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_ecommerce_events",
+        "asset_id": "gcp_bq_ecommerce_events",
+        "name": "Events (ecommerce)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.ecommerce.events",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "IP_ADDRESS"
+        ],
+        "columns_total": 13,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_ecommerce_gold_customer_churn_features",
+        "asset_id": "gcp_bq_ecommerce_gold_customer_churn_features",
+        "name": "Gold Customer Churn Features (ecommerce)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.ecommerce.gold_customer_churn_features",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 8,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Activo verificado sin PII detectable. Certificado para consumo general."
+      },
+      {
+        "id": "prof_gcp_bq_fabril_Gastos_master",
+        "asset_id": "gcp_bq_fabril_Gastos_master",
+        "name": "Gastos Master (fabril)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.fabril.Gastos_master",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 23,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Activo verificado sin PII detectable. Certificado para consumo general."
+      },
+      {
+        "id": "prof_gcp_bq_fabril_OBT_business_review_2026",
+        "asset_id": "gcp_bq_fabril_OBT_business_review_2026",
+        "name": "Obt Business Review 2026 (fabril)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.fabril.OBT_business_review_2026",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "IP_ADDRESS"
+        ],
+        "columns_total": 59,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_fabril_costo_manufactura",
+        "asset_id": "gcp_bq_fabril_costo_manufactura",
+        "name": "Costo Manufactura (fabril)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.fabril.costo_manufactura",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "IP_ADDRESS"
+        ],
+        "columns_total": 20,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_flights_dataset_cymbalair_policies",
+        "asset_id": "gcp_bq_flights_dataset_cymbalair_policies",
+        "name": "Cymbalair Policies (flights_dataset)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.flights_dataset.cymbalair_policies",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 3,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Activo verificado sin PII detectable. Certificado para consumo general."
+      },
+      {
+        "id": "prof_gcp_bq_flights_dataset_flight_history",
+        "asset_id": "gcp_bq_flights_dataset_flight_history",
+        "name": "Flight History (flights_dataset)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.flights_dataset.flight_history",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 11,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Activo verificado sin PII detectable. Certificado para consumo general."
+      },
+      {
+        "id": "prof_gcp_bq_flights_dataset_ticket_sales_history",
+        "asset_id": "gcp_bq_flights_dataset_ticket_sales_history",
+        "name": "Ticket Sales History (flights_dataset)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.flights_dataset.ticket_sales_history",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "TAX_ID_RFC_SSN"
+        ],
+        "columns_total": 11,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_governed_data_sdp_scan_customer",
+        "asset_id": "gcp_bq_governed_data_sdp_scan_customer",
+        "name": "Customer (governed_data_sdp_scan)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.governed_data_sdp_scan.customer",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME"
+        ],
+        "columns_total": 10,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_recetamedicas_prescripciones",
+        "asset_id": "gcp_bq_recetamedicas_prescripciones",
+        "name": "Prescripciones (recetamedicas)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.recetamedicas.prescripciones",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME"
+        ],
+        "columns_total": 10,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_recetamedicas_prescripciones_cloud_run",
+        "asset_id": "gcp_bq_recetamedicas_prescripciones_cloud_run",
+        "name": "Prescripciones Cloud Run (recetamedicas)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.recetamedicas.prescripciones_cloud_run",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME"
+        ],
+        "columns_total": 9,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_retail_demo_distribution_centers",
+        "asset_id": "gcp_bq_retail_demo_distribution_centers",
+        "name": "Distribution Centers (retail_demo)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.retail_demo.distribution_centers",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "LOCATION_GEO",
+          "PERSON_NAME"
+        ],
+        "columns_total": 5,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_retail_demo_inventory_items",
+        "asset_id": "gcp_bq_retail_demo_inventory_items",
+        "name": "Inventory Items (retail_demo)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.retail_demo.inventory_items",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME"
+        ],
+        "columns_total": 12,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_gcp_bq_retail_demo_order_items",
+        "asset_id": "gcp_bq_retail_demo_order_items",
+        "name": "Order Items (retail_demo)",
+        "cloud": "GCP",
+        "service": "BigQuery",
+        "resource_location": "agentspace-demos-466121.retail_demo.order_items",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "IP_ADDRESS"
+        ],
+        "columns_total": 11,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:18 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_ext_mysql_bdcomercial_clientes",
+        "asset_id": "ext_mysql_bdcomercial_clientes",
+        "name": "MYSQL Clientes",
+        "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+        "service": "Aiven Cloud MySQL Engine",
+        "resource_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.clientes",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "LOCATION_GEO",
+          "PERSON_NAME"
+        ],
+        "columns_total": 4,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:55 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_ext_mysql_bdcomercial_detalles_ventas",
+        "asset_id": "ext_mysql_bdcomercial_detalles_ventas",
+        "name": "MYSQL Detalles ventas",
+        "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+        "service": "Aiven Cloud MySQL Engine",
+        "resource_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.detalles_ventas",
+        "sensitivity_level": "LOW",
+        "data_risk_level": "LOW",
+        "predicted_infotypes": [],
+        "columns_total": 4,
+        "sensitive_columns_count": 0,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 16:03 UTC",
+        "recommendation": "Activo verificado sin PII detectable. Certificado para consumo general."
+      },
+      {
+        "id": "prof_ext_mysql_bdcomercial_productos",
+        "asset_id": "ext_mysql_bdcomercial_productos",
+        "name": "MYSQL Productos",
+        "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+        "service": "Aiven Cloud MySQL Engine",
+        "resource_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.productos",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME"
+        ],
+        "columns_total": 4,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:55 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_ext_mysql_bdcomercial_resumen_comercial_consolidado",
+        "asset_id": "ext_mysql_bdcomercial_resumen_comercial_consolidado",
+        "name": "MYSQL Resumen comercial consolidado",
+        "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+        "service": "Aiven Cloud MySQL Engine",
+        "resource_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.resumen_comercial_consolidado",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "LOCATION_GEO",
+          "PERSON_NAME"
+        ],
+        "columns_total": 16,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:55 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_ext_mysql_bdcomercial_vendedores",
+        "asset_id": "ext_mysql_bdcomercial_vendedores",
+        "name": "MYSQL Vendedores",
+        "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+        "service": "Aiven Cloud MySQL Engine",
+        "resource_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.vendedores",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "LOCATION_GEO",
+          "PERSON_NAME"
+        ],
+        "columns_total": 3,
+        "sensitive_columns_count": 2,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:55 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      },
+      {
+        "id": "prof_ext_mysql_bdcomercial_ventas",
+        "asset_id": "ext_mysql_bdcomercial_ventas",
+        "name": "MYSQL Ventas",
+        "cloud": "MYSQL (mysql-1c645071-google-beed.j.aivencloud.com)",
+        "service": "Aiven Cloud MySQL Engine",
+        "resource_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.ventas",
+        "sensitivity_level": "MODERATE",
+        "data_risk_level": "MODERATE",
+        "predicted_infotypes": [
+          "PERSON_NAME"
+        ],
+        "columns_total": 4,
+        "sensitive_columns_count": 1,
+        "free_text_risk": "LOW",
+        "encryption_type": "Google-Managed Key",
+        "status": "GENERATED",
+        "last_profile_date": "2026-07-31 15:55 UTC",
+        "recommendation": "Clasificar con Tag Template de Gobernanza y verificar encriptación."
+      }
+    ]
+  },
+  "infotypes": {
+    "builtin": [
+      {
+        "name": "EMAIL_ADDRESS",
+        "display_name": "Correo Electrónico",
+        "category": "PII",
+        "description": "Direcciones de correo electrónico estándar (RFC 5322).",
+        "likelihood": "VERY_LIKELY",
+        "sample": "usuario.ejemplo@empresa.com",
+        "regex_hint": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+      },
+      {
+        "name": "PERSON_NAME",
+        "display_name": "Nombre de Persona",
+        "category": "PII",
+        "description": "Nombres y apellidos comunes en múltiples idiomas y regiones.",
+        "likelihood": "LIKELY",
+        "sample": "Carlos Eduardo Mendoza Morales",
+        "regex_hint": "Diccionario estadístico NLP y heurística contextual"
+      },
+      {
+        "name": "PHONE_NUMBER",
+        "display_name": "Número de Teléfono",
+        "category": "PII",
+        "description": "Números telefónicos internacionales y locales con formato E.164 o estándar.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "+51 987 654 321, +1 415 555 2671",
+        "regex_hint": "\\+?[0-9]{1,4}?[-.\\s]?(\\([0-9]{2,3}\\)|[0-9]{2,3})[-.\\s]?[0-9]{3,4}[-.\\s]?[0-9]{4}"
+      },
+      {
+        "name": "CREDIT_CARD_NUMBER",
+        "display_name": "Número de Tarjeta de Crédito (PCI)",
+        "category": "Financiero",
+        "description": "Números de tarjetas de crédito/débito (Visa, Mastercard, Amex) con validación Luhn.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "4532-8976-1234-5678",
+        "regex_hint": "(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13})"
+      },
+      {
+        "name": "IBAN_BANK_ACCOUNT",
+        "display_name": "Cuenta Bancaria / IBAN",
+        "category": "Financiero",
+        "description": "Códigos internacionales de cuenta bancaria (IBAN) y cuentas interbancarias (CCI).",
+        "likelihood": "VERY_LIKELY",
+        "sample": "ES91 2100 0418 4502 0005 1332",
+        "regex_hint": "[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}"
+      },
+      {
+        "name": "US_SSN",
+        "display_name": "Social Security Number (US SSN)",
+        "category": "Identidad Gubernamental",
+        "description": "Número de Seguro Social de Estados Unidos con formato 9 dígitos.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "123-45-6789",
+        "regex_hint": "^(?!000|666|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0000)\\d{4}$"
+      },
+      {
+        "name": "PERU_DNI",
+        "display_name": "DNI Perú (Documento Nacional de Identidad)",
+        "category": "Identidad Gubernamental",
+        "description": "Número de documento nacional de identidad de 8 dígitos de Perú.",
+        "likelihood": "LIKELY",
+        "sample": "45871239",
+        "regex_hint": "\\b[0-9]{8}\\b"
+      },
+      {
+        "name": "SPAIN_NIF",
+        "display_name": "NIF / NIE España",
+        "category": "Identidad Gubernamental",
+        "description": "Número de identificación fiscal y de extranjero de España con letra de control.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "12345678Z, X1234567L",
+        "regex_hint": "[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]"
+      },
+      {
+        "name": "MEXICO_RFC",
+        "display_name": "RFC México (Registro Federal de Contribuyentes)",
+        "category": "Identidad Gubernamental",
+        "description": "Clave alfanumérica de personas físicas y morales en México con homoclave.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "MOMA850614HR1",
+        "regex_hint": "[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{3}"
+      },
+      {
+        "name": "CHILE_RUT",
+        "display_name": "RUT / RUN Chile",
+        "category": "Identidad Gubernamental",
+        "description": "Rol Único Tributario de Chile con dígito verificador módulo 11.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "12.345.678-K",
+        "regex_hint": "\\b[0-9]{1,2}\\.?[0-9]{3}\\.?[0-9]{3}-[0-9kK]\\b"
+      },
+      {
+        "name": "COLOMBIA_NIT",
+        "display_name": "NIT / Cédula Colombia",
+        "category": "Identidad Gubernamental",
+        "description": "Número de Identificación Tributaria o Cédula de Ciudadanía de Colombia.",
+        "likelihood": "LIKELY",
+        "sample": "900.123.456-7",
+        "regex_hint": "\\b[0-9]{3}\\.?[0-9]{3}\\.?[0-9]{3}-?[0-9]?\\b"
+      },
+      {
+        "name": "PASSPORT",
+        "display_name": "Número de Pasaporte",
+        "category": "Identidad Gubernamental",
+        "description": "Números de pasaportes internacionales conforme a OACI Doc 9303.",
+        "likelihood": "LIKELY",
+        "sample": "A12345678, P0987654",
+        "regex_hint": "[A-Z0-9]{6,9}"
+      },
+      {
+        "name": "IP_ADDRESS",
+        "display_name": "Dirección IP (IPv4 / IPv6)",
+        "category": "Credenciales y Red",
+        "description": "Direcciones IP públicas o privadas en protocolos de red IPv4 o IPv6.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "192.168.1.1, 2001:0db8:85a3::8a2e:0370:7334",
+        "regex_hint": "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
+      },
+      {
+        "name": "AUTH_TOKEN",
+        "display_name": "Token de Autenticación / API Key",
+        "category": "Credenciales y Red",
+        "description": "Claves de API, tokens JWT (Bearer), contraseñas y secrets expuestos en texto.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "AIzaSyD-7qEXAMPLE123456, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "regex_hint": "(AIza[0-9A-Za-z-_]{35}|ghp_[0-9a-zA-Z]{36}|Bearer\\s+[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.?[A-Za-z0-9-_.+/=]*)"
+      },
+      {
+        "name": "MEDICAL_RECORD_NUMBER",
+        "display_name": "Historial Médico (HIPAA MRN)",
+        "category": "Salud",
+        "description": "Número de registro médico o código de paciente clínico protegido por HIPAA.",
+        "likelihood": "LIKELY",
+        "sample": "MRN-90210-A, HC-847291",
+        "regex_hint": "\\b(MRN|HC|PAC)[-_]?[0-9]{5,8}[A-Z]?\\b"
+      },
+      {
+        "name": "DATE_OF_BIRTH",
+        "display_name": "Fecha de Nacimiento",
+        "category": "PII",
+        "description": "Fechas asociadas a nacimiento de usuarios o clientes.",
+        "likelihood": "LIKELY",
+        "sample": "1985-06-14, 14/06/1985",
+        "regex_hint": "(19|20)[0-9]{2}[-/.](0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])"
+      },
+      {
+        "name": "LOCATION_GEO",
+        "display_name": "Ubicación Geográfica / Dirección",
+        "category": "PII",
+        "description": "Direcciones residenciales, coordenadas GPS o códigos postales asociados a individuos.",
+        "likelihood": "POSSIBLE",
+        "sample": "Av. Javier Prado Este 4200, San Isidro, Lima",
+        "regex_hint": "Análisis semántico contextual y diccionarios postales"
+      },
+      {
+        "name": "CRYPTO_WALLET_ADDRESS",
+        "display_name": "Dirección Wallet Cripto",
+        "category": "Financiero",
+        "description": "Direcciones públicas de billeteras Bitcoin, Ethereum y Solana.",
+        "likelihood": "VERY_LIKELY",
+        "sample": "0x71C...849, bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+        "regex_hint": "(0x[a-fA-F0-9]{40}|[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})"
+      }
+    ],
+    "custom": [
+      {
+        "id": "custom_emp_id_corp",
+        "name": "CUSTOM_EMPLOYEE_ID",
+        "display_name": "Código de Empleado Corporativo",
+        "type": "REGEX",
+        "description": "Código interno de identificación de empleados con formato EMP-XXXXX.",
+        "regex_pattern": "\\bEMP-[0-9]{5,6}\\b",
+        "dictionary_words": [],
+        "likelihood": "VERY_LIKELY",
+        "hotwords": [
+          "empleado",
+          "colaborador",
+          "staff",
+          "payroll"
+        ],
+        "created_by": "Lucía Morales (Data Steward)",
+        "created_at": "2026-07-28 11:20 UTC",
+        "status": "ACTIVE",
+        "inspect_count": 42
+      },
+      {
+        "id": "custom_project_codename",
+        "name": "CONFIDENTIAL_PROJECT_CODE",
+        "display_name": "Nombres Clave de Proyectos Confidenciales",
+        "type": "DICTIONARY",
+        "description": "Diccionario con palabras clave y nombres de proyectos M&A y patentes en desarrollo.",
+        "regex_pattern": "",
+        "dictionary_words": [
+          "Proyecto Titan",
+          "Operacion Andromeda",
+          "Algoritmo Quasar",
+          "AlphaSecret",
+          "DataMeshQuantum"
+        ],
+        "likelihood": "VERY_LIKELY",
+        "hotwords": [
+          "secreto",
+          "confidencial",
+          "nda",
+          "proyecto",
+          "clave"
+        ],
+        "created_by": "Javier Mendoza (Lead Architect)",
+        "created_at": "2026-07-29 15:40 UTC",
+        "status": "ACTIVE",
+        "inspect_count": 18
+      },
+      {
+        "id": "custom_financial_vault_ref",
+        "name": "INTERNAL_FINANCIAL_VAULT_REF",
+        "display_name": "Referencia de Bóveda Financiera",
+        "type": "REGEX",
+        "description": "Identificador de transacción interbancaria de alto valor VAULT-REF-XXXX.",
+        "regex_pattern": "\\bVAULT-REF-[A-Z0-9]{8}\\b",
+        "dictionary_words": [],
+        "likelihood": "VERY_LIKELY",
+        "hotwords": [
+          "bóveda",
+          "boveda",
+          "transferencia",
+          "vault",
+          "tesorería"
+        ],
+        "created_by": "Elena Rostova (CDO)",
+        "created_at": "2026-07-30 09:10 UTC",
+        "status": "ACTIVE",
+        "inspect_count": 9
+      }
+    ]
+  },
+  "inspect_jobs": [
+    {
+      "job_id": "job_insp_20260731155610_bca9",
+      "name": "Inspección On-Demand SDP (MYSQL)",
+      "target_asset_id": "ext_mysql_bdcomercial_clientes",
+      "target_name": "MYSQL Clientes (Aiven Cloud MySQL Engine)",
+      "target_type": "Aiven Cloud MySQL Engine",
+      "target_location": "mysql-1c645071-google-beed.j.aivencloud.com:10283.bdcomercial.clientes",
+      "infotypes_selected": [
+        "EMAIL_ADDRESS",
+        "PERSON_NAME",
+        "PHONE_NUMBER",
+        "CREDIT_CARD_NUMBER",
+        "CUSTOM_EMPLOYEE_ID"
+      ],
+      "min_likelihood": "LIKELY",
+      "sampling_pct": 100,
+      "status": "COMPLETED",
+      "rows_scanned": 50,
+      "findings_count": 2,
+      "findings_breakdown": [
+        {
+          "column": "cliente_id",
+          "infotype": "CUSTOM_EMPLOYEE_ID",
+          "count": 50,
+          "likelihood": "LIKELY"
+        },
+        {
+          "column": "nombre_cliente",
+          "infotype": "PERSON_NAME",
+          "count": 50,
+          "likelihood": "LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Resultado persistido en tabla de auditoría Cloud DLP",
+        "Policy Tags y taxonomías de BigQuery sincronizadas automáticamente"
+      ],
+      "created_at": "2026-07-31 15:56 UTC",
+      "completed_at": "2026-07-31 15:56 UTC",
+      "duration_seconds": 45,
+      "created_by": "Lucía Morales (Senior Data Steward)"
+    },
+    {
+      "job_id": "job_insp_20260731153402_9b0a",
+      "name": "Auditoría On-Demand SDP",
+      "target_asset_id": "gcp_bq_customers_360",
+      "target_name": "Clientes 360 Maestro (BigQuery)",
+      "target_type": "BigQuery",
+      "target_location": "corp-analytics-prod.marketing_governance.dim_clientes_360",
+      "infotypes_selected": [
+        "EMAIL_ADDRESS",
+        "PERSON_NAME",
+        "PHONE_NUMBER",
+        "CREDIT_CARD_NUMBER",
+        "CUSTOM_EMPLOYEE_ID"
+      ],
+      "min_likelihood": "LIKELY",
+      "sampling_pct": 100,
+      "status": "COMPLETED",
+      "rows_scanned": 150000,
+      "findings_count": 5,
+      "findings_breakdown": [
+        {
+          "column": "customer_id",
+          "infotype": "CUSTOM_EMPLOYEE_ID",
+          "count": 120000,
+          "likelihood": "LIKELY"
+        },
+        {
+          "column": "full_name",
+          "infotype": "PERSON_NAME",
+          "count": 120000,
+          "likelihood": "LIKELY"
+        },
+        {
+          "column": "email_address",
+          "infotype": "EMAIL_ADDRESS",
+          "count": 120000,
+          "likelihood": "LIKELY"
+        },
+        {
+          "column": "phone_number",
+          "infotype": "PHONE_NUMBER",
+          "count": 120000,
+          "likelihood": "LIKELY"
+        },
+        {
+          "column": "credit_card_hash",
+          "infotype": "CREDIT_CARD_NUMBER",
+          "count": 120000,
+          "likelihood": "LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Resultado persistido en tabla de auditoría Cloud DLP",
+        "Policy Tags y taxonomías de BigQuery sincronizadas automáticamente"
+      ],
+      "created_at": "2026-07-31 15:34 UTC",
+      "completed_at": "2026-07-31 15:34 UTC",
+      "duration_seconds": 45,
+      "created_by": "Lucía Morales (Senior Data Steward)"
+    },
+    {
+      "job_id": "job_insp_20260731_001",
+      "name": "Inspección Periódica - Clientes 360 Maestro",
+      "target_asset_id": "gcp_bq_customers_360",
+      "target_name": "Clientes 360 Maestro (BigQuery)",
+      "target_type": "BigQuery",
+      "target_location": "corp-analytics-prod.marketing_governance.dim_clientes_360",
+      "infotypes_selected": [
+        "PERSON_NAME",
+        "EMAIL_ADDRESS",
+        "PHONE_NUMBER",
+        "CREDIT_CARD_NUMBER",
+        "CUSTOM_EMPLOYEE_ID"
+      ],
+      "min_likelihood": "LIKELY",
+      "sampling_pct": 100,
+      "status": "COMPLETED",
+      "rows_scanned": 154200,
+      "findings_count": 4,
+      "findings_breakdown": [
+        {
+          "column": "full_name",
+          "infotype": "PERSON_NAME",
+          "count": 154180,
+          "likelihood": "VERY_LIKELY"
+        },
+        {
+          "column": "email_address",
+          "infotype": "EMAIL_ADDRESS",
+          "count": 153920,
+          "likelihood": "VERY_LIKELY"
+        },
+        {
+          "column": "phone_number",
+          "infotype": "PHONE_NUMBER",
+          "count": 150800,
+          "likelihood": "LIKELY"
+        },
+        {
+          "column": "credit_card_hash",
+          "infotype": "CREDIT_CARD_NUMBER",
+          "count": 128450,
+          "likelihood": "VERY_LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Resultado guardado en tabla de auditoría",
+        "Policy Tags sincronizadas con Knowledge Catalog"
+      ],
+      "created_at": "2026-07-31 08:00 UTC",
+      "completed_at": "2026-07-31 08:02 UTC",
+      "duration_seconds": 124,
+      "created_by": "Lucía Morales (Data Steward)"
+    },
+    {
+      "job_id": "job_insp_20260731_002",
+      "name": "Auditoría PCI - Fact Ventas POS",
+      "target_asset_id": "gcp_bq_fact_ventas_pos",
+      "target_name": "Fact Ventas POS Omnicanal (BigQuery)",
+      "target_type": "BigQuery",
+      "target_location": "corp-analytics-prod.sales_dw.fact_ventas_pos",
+      "infotypes_selected": [
+        "CREDIT_CARD_NUMBER",
+        "IBAN_BANK_ACCOUNT",
+        "TAX_ID_RFC_SSN"
+      ],
+      "min_likelihood": "POSSIBLE",
+      "sampling_pct": 50,
+      "status": "COMPLETED",
+      "rows_scanned": 2890000,
+      "findings_count": 2,
+      "findings_breakdown": [
+        {
+          "column": "numero_tarjeta_pago",
+          "infotype": "CREDIT_CARD_NUMBER",
+          "count": 2450000,
+          "likelihood": "VERY_LIKELY"
+        },
+        {
+          "column": "codigo_cuenta_banco",
+          "infotype": "IBAN_BANK_ACCOUNT",
+          "count": 440000,
+          "likelihood": "LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Alerta PCI-DSS generada a SecOps",
+        "Dynamic Data Masking Verificado"
+      ],
+      "created_at": "2026-07-31 07:30 UTC",
+      "completed_at": "2026-07-31 07:36 UTC",
+      "duration_seconds": 360,
+      "created_by": "Javier Mendoza (Lead Architect)"
+    },
+    {
+      "job_id": "job_insp_20260730_003",
+      "name": "Escaneo de Archivos Crudos GCS Landing",
+      "target_asset_id": "gcp_gcs_raw_landing_lake",
+      "target_name": "Landing Zone GCS (Data Lake)",
+      "target_type": "Cloud Storage",
+      "target_location": "gs://corp-data-lake-landing-us-central1/raw_ingestion/",
+      "infotypes_selected": [
+        "EMAIL_ADDRESS",
+        "PERSON_NAME",
+        "AUTH_TOKEN",
+        "CONFIDENTIAL_PROJECT_CODE"
+      ],
+      "min_likelihood": "VERY_LIKELY",
+      "sampling_pct": 100,
+      "status": "COMPLETED",
+      "rows_scanned": 45000,
+      "findings_count": 2,
+      "findings_breakdown": [
+        {
+          "column": "payload.email",
+          "infotype": "EMAIL_ADDRESS",
+          "count": 12400,
+          "likelihood": "VERY_LIKELY"
+        },
+        {
+          "column": "payload.auth_header",
+          "infotype": "AUTH_TOKEN",
+          "count": 3,
+          "likelihood": "VERY_LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Tokens de autenticación alertados inmediatamente a Seguridad"
+      ],
+      "created_at": "2026-07-30 20:00 UTC",
+      "completed_at": "2026-07-30 20:01 UTC",
+      "duration_seconds": 68,
+      "created_by": "Lucía Morales (Data Steward)"
+    },
+    {
+      "job_id": "job_insp_mysql_clientes_001",
+      "name": "Inspección PII Clientes (MySQL Aiven)",
+      "target_asset_id": "ext_mysql_bdcomercial_clientes",
+      "target_name": "Clientes (MySQL Aiven Cloud)",
+      "target_type": "MySQL Database",
+      "target_location": "mysql-1c645071.aivencloud.com.bdcomercial.clientes",
+      "infotypes_selected": [
+        "EMAIL_ADDRESS",
+        "PERSON_NAME",
+        "PHONE_NUMBER",
+        "LOCATION_GEO"
+      ],
+      "min_likelihood": "LIKELY",
+      "sampling_pct": 100,
+      "status": "COMPLETED",
+      "rows_scanned": 50,
+      "findings_count": 2,
+      "findings_breakdown": [
+        {
+          "column": "nombre_cliente",
+          "infotype": "PERSON_NAME",
+          "count": 50,
+          "likelihood": "VERY_LIKELY"
+        },
+        {
+          "column": "ciudad",
+          "infotype": "LOCATION_GEO",
+          "count": 50,
+          "likelihood": "LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Metadatos de PII catalogados en Knowledge Catalog",
+        "Regla de salida federada activada en Conector MySQL"
+      ],
+      "created_at": "2026-07-31 11:00 UTC",
+      "completed_at": "2026-07-31 11:01 UTC",
+      "duration_seconds": 32,
+      "created_by": "Lucía Morales (Senior Data Steward)"
+    },
+    {
+      "job_id": "job_insp_mysql_resumen_002",
+      "name": "Auditoría Comercial - Resumen Consolidado MySQL",
+      "target_asset_id": "ext_mysql_bdcomercial_resumen_comercial_consolidado",
+      "target_name": "Resumen Comercial Consolidado (MySQL)",
+      "target_type": "MySQL Database",
+      "target_location": "mysql-1c645071.aivencloud.com.bdcomercial.resumen_comercial_consolidado",
+      "infotypes_selected": [
+        "PERSON_NAME",
+        "EMAIL_ADDRESS"
+      ],
+      "min_likelihood": "LIKELY",
+      "sampling_pct": 100,
+      "status": "COMPLETED",
+      "rows_scanned": 8450,
+      "findings_count": 2,
+      "findings_breakdown": [
+        {
+          "column": "nombre_vendedor",
+          "infotype": "PERSON_NAME",
+          "count": 8450,
+          "likelihood": "VERY_LIKELY"
+        },
+        {
+          "column": "correo_contacto",
+          "infotype": "EMAIL_ADDRESS",
+          "count": 8450,
+          "likelihood": "VERY_LIKELY"
+        }
+      ],
+      "actions_executed": [
+        "Clasificación automática completada",
+        "Tag Template de Vendedor Protegido aplicado"
+      ],
+      "created_at": "2026-07-31 10:15 UTC",
+      "completed_at": "2026-07-31 10:16 UTC",
+      "duration_seconds": 21,
+      "created_by": "Javier Mendoza (Lead Architect)"
+    }
+  ],
+  "job_triggers": [
+    {
+      "trigger_id": "trig_daily_dim_clientes",
+      "name": "Disparador Diario SDP - dim_clientes_360",
+      "description": "Inspección continua programada todas las noches a las 02:00 AM UTC para detectar nuevos campos PII.",
+      "schedule": "Todos los días a las 02:00 UTC",
+      "cron_expression": "0 2 * * *",
+      "target_asset_id": "gcp_bq_customers_360",
+      "target_name": "Clientes 360 Maestro",
+      "template_id": "tmpl_pii_latam_standard",
+      "status": "ACTIVE",
+      "last_run": "2026-07-31 02:00 UTC",
+      "next_run": "2026-08-01 02:00 UTC",
+      "execution_count": 48,
+      "created_by": "Lucía Morales (Data Steward)"
+    },
+    {
+      "trigger_id": "trig_daily_mysql_clientes",
+      "name": "Disparador Diario SDP - MySQL bdcomercial.clientes",
+      "description": "Inspección programada diaria a la 03:00 AM UTC sobre la base de datos externa MySQL en Aiven Cloud.",
+      "schedule": "Todos los días a las 03:00 UTC",
+      "cron_expression": "0 3 * * *",
+      "target_asset_id": "ext_mysql_bdcomercial_clientes",
+      "target_name": "Clientes (MySQL bdcomercial)",
+      "template_id": "tmpl_pii_latam_standard",
+      "status": "ACTIVE",
+      "last_run": "2026-07-31 03:00 UTC",
+      "next_run": "2026-08-01 03:00 UTC",
+      "execution_count": 22,
+      "created_by": "Lucía Morales (Data Steward)"
+    },
+    {
+      "trigger_id": "trig_weekly_mysql_ventas",
+      "name": "Auditoría Semanal SDP - MySQL bdcomercial.ventas",
+      "description": "Escaneo periódico de tablas transaccionales de ventas en MySQL para validar cumplimiento de privacidad.",
+      "schedule": "Lunes a las 05:00 UTC",
+      "cron_expression": "0 5 * * 1",
+      "target_asset_id": "ext_mysql_bdcomercial_ventas",
+      "target_name": "Ventas (MySQL bdcomercial)",
+      "template_id": "tmpl_pii_latam_standard",
+      "status": "ACTIVE",
+      "last_run": "2026-07-28 05:00 UTC",
+      "next_run": "2026-08-04 05:00 UTC",
+      "execution_count": 8,
+      "created_by": "Javier Mendoza (Lead Architect)"
+    },
+    {
+      "trigger_id": "trig_weekly_sales_pos",
+      "name": "Auditoría Semanal PCI - fact_ventas_pos",
+      "description": "Escaneo exhaustivo semanal de tablas de hechos transaccionales para validar ausencia de CVV o tarjetas en texto plano.",
+      "schedule": "Domingos a las 04:00 UTC",
+      "cron_expression": "0 4 * * 0",
+      "target_asset_id": "gcp_bq_fact_ventas_pos",
+      "target_name": "Fact Ventas POS Omnicanal",
+      "template_id": "tmpl_pci_financial_strict",
+      "status": "ACTIVE",
+      "last_run": "2026-07-27 04:00 UTC",
+      "next_run": "2026-08-03 04:00 UTC",
+      "execution_count": 12,
+      "created_by": "Javier Mendoza (Lead Architect)"
+    },
+    {
+      "trigger_id": "trig_event_gcs_landing",
+      "name": "Disparador Event-Driven GCS Landing Zone",
+      "description": "Inspección automática activada ante la carga de nuevos objetos CSV/JSON en el bucket de ingesta.",
+      "schedule": "En cada evento de subida (Pub/Sub)",
+      "cron_expression": "EVENT_DRIVEN",
+      "target_asset_id": "gcp_gcs_raw_landing_lake",
+      "target_name": "Landing Zone GCS (Data Lake)",
+      "template_id": "tmpl_pii_latam_standard",
+      "status": "ACTIVE",
+      "last_run": "2026-07-31 06:12 UTC",
+      "next_run": "Continuo (Trigger en tiempo real)",
+      "execution_count": 315,
+      "created_by": "Lucía Morales (Data Steward)"
+    },
+    {
+      "trigger_id": "trig_336a098b",
+      "name": "Trigger Periódico SDP - Producción",
+      "description": "Inspección automática programada con plantilla estándar.",
+      "schedule": "Todos los días a las 02:00 UTC",
+      "cron_expression": "0 4 * * 0",
+      "target_asset_id": "gcp_bq_customers_360",
+      "target_name": "Clientes 360 Maestro",
+      "template_id": "tmpl_pii_latam_standard",
+      "status": "ACTIVE",
+      "last_run": "Pendiente de primer disparo",
+      "next_run": "Próxima ejecución según cronograma",
+      "execution_count": 0,
+      "created_by": "Lucía Morales (Senior Data Steward)"
+    }
+  ],
+  "risk_analysis": {
+    "supported_services": [
+      "BigQuery"
+    ],
+    "evaluations": {
+      "gcp_bq_customers_360": {
+        "asset_id": "gcp_bq_customers_360",
+        "table_name": "dim_clientes_360",
+        "dataset": "marketing_governance",
+        "project": "corp-analytics-prod",
+        "total_records": 154200,
+        "evaluated_at": "2026-07-31 10:00 UTC",
+        "quasi_identifiers": [
+          "full_name",
+          "phone_number",
+          "customer_segment"
+        ],
+        "sensitive_attributes": [
+          "credit_card_hash",
+          "total_spend_ytd"
+        ],
+        "k_anonymity": {
+          "min_k_value": 1,
+          "vulnerable_records_k1": 385,
+          "vulnerable_percentage_k1": 0.25,
+          "records_k_less_than_5": 1420,
+          "vulnerable_percentage_k5": 0.92,
+          "status": "REQUIRES_GENERALIZATION",
+          "equivalence_classes_count": 48200,
+          "distribution": [
+            {
+              "k_range": "k = 1 (Identificable Directo)",
+              "count": 385,
+              "pct": 0.25,
+              "risk": "Alto"
+            },
+            {
+              "k_range": "k = 2 - 4 (Riesgo Significativo)",
+              "count": 1035,
+              "pct": 0.67,
+              "risk": "Medio"
+            },
+            {
+              "k_range": "k = 5 - 19 (Moderadamente Anónimo)",
+              "count": 18500,
+              "pct": 12.0,
+              "risk": "Bajo"
+            },
+            {
+              "k_range": "k >= 20 (Altamente Protegido)",
+              "count": 134280,
+              "pct": 87.08,
+              "risk": "Mínimo"
+            }
+          ]
+        },
+        "l_diversity": {
+          "min_l_value": 1,
+          "sensitive_column": "total_spend_ytd",
+          "distinct_values_avg": 4.8,
+          "status": "MODERATE_DIVERSITY",
+          "risk_insight": "El 1.2% de los grupos de quasi-identificadores poseen un valor único sensible sin variabilidad."
+        },
+        "delta_presence": {
+          "reidentification_probability_pct": 14.8,
+          "risk_gauge": "MODERADO",
+          "color": "#f59e0b",
+          "benchmark_population": "Población general de clientes registrados en CRM"
+        },
+        "anonymization_recommendations": [
+          {
+            "technique": "Generalización de Atributos (Bucketization)",
+            "target_column": "customer_segment / total_spend_ytd",
+            "action": "Agrupar montos en rangos categóricos (e.g. $0-$500, $501-$2000, >$2000) para elevar k-anonymity a k >= 5.",
+            "impact_on_utility": "Bajo (Conserva valor analítico)"
+          },
+          {
+            "technique": "Supresión o Enmascaramiento Dinámico",
+            "target_column": "full_name / phone_number",
+            "action": "Aplicar Dynamic Data Masking (DDM) SHA-256 en BigQuery para impedir visualización no autorizada.",
+            "impact_on_utility": "Nulo para analítica anonimizada"
+          },
+          {
+            "technique": "Tokenización Criptográfica Determinística",
+            "target_column": "customer_id",
+            "action": "Reemplazar UUID con token reversible con clave Cloud KMS para preservar joins analíticos.",
+            "impact_on_utility": "Mantiene integridad referencial"
+          }
+        ]
+      },
+      "gcp_bq_fact_ventas_pos": {
+        "asset_id": "gcp_bq_fact_ventas_pos",
+        "table_name": "fact_ventas_pos",
+        "dataset": "sales_dw",
+        "project": "corp-analytics-prod",
+        "total_records": 2890000,
+        "evaluated_at": "2026-07-31 09:30 UTC",
+        "quasi_identifiers": [
+          "codigo_tienda",
+          "fecha_hora_transaccion",
+          "medio_pago"
+        ],
+        "sensitive_attributes": [
+          "monto_total_transaccion",
+          "numero_tarjeta_pago"
+        ],
+        "k_anonymity": {
+          "min_k_value": 3,
+          "vulnerable_records_k1": 0,
+          "vulnerable_percentage_k1": 0.0,
+          "records_k_less_than_5": 420,
+          "vulnerable_percentage_k5": 0.01,
+          "status": "WELL_PROTECTED",
+          "equivalence_classes_count": 120400,
+          "distribution": [
+            {
+              "k_range": "k = 1 (Identificable Directo)",
+              "count": 0,
+              "pct": 0.0,
+              "risk": "Bajo"
+            },
+            {
+              "k_range": "k = 2 - 4 (Riesgo Significativo)",
+              "count": 420,
+              "pct": 0.01,
+              "risk": "Bajo"
+            },
+            {
+              "k_range": "k = 5 - 19 (Moderadamente Anónimo)",
+              "count": 35000,
+              "pct": 1.21,
+              "risk": "Mínimo"
+            },
+            {
+              "k_range": "k >= 20 (Altamente Protegido)",
+              "count": 2854580,
+              "pct": 98.78,
+              "risk": "Mínimo"
+            }
+          ]
+        },
+        "l_diversity": {
+          "min_l_value": 3,
+          "sensitive_column": "monto_total_transaccion",
+          "distinct_values_avg": 18.2,
+          "status": "HIGH_DIVERSITY",
+          "risk_insight": "Alta diversidad de valores de compra en cada combinación de tienda y fecha."
+        },
+        "delta_presence": {
+          "reidentification_probability_pct": 2.1,
+          "risk_gauge": "BAJO",
+          "color": "#10b981",
+          "benchmark_population": "Transacciones de caja en tiendas retail físicas"
+        },
+        "anonymization_recommendations": [
+          {
+            "technique": "Tokenización PCI & Dynamic Data Masking",
+            "target_column": "numero_tarjeta_pago",
+            "action": "Mantener exclusivamente los últimos 4 dígitos visibles (****-****-****-1234) para auditores autorizados.",
+            "impact_on_utility": "Cumplimiento 100% PCI-DSS"
+          }
+        ]
+      }
+    }
+  },
+  "templates": {
+    "inspect_templates": [
+      {
+        "template_id": "tmpl_pii_latam_standard",
+        "name": "Plantilla Estándar PII Latinoamérica",
+        "description": "Inspección completa de datos de identidad, correos, teléfonos y DNI/RFC/RUT para operaciones regionales.",
+        "infotypes": [
+          "EMAIL_ADDRESS",
+          "PERSON_NAME",
+          "PHONE_NUMBER",
+          "PERU_DNI",
+          "MEXICO_RFC",
+          "CHILE_RUT",
+          "COLOMBIA_NIT"
+        ],
+        "min_likelihood": "LIKELY",
+        "max_findings_per_item": 1000,
+        "created_by": "Lucía Morales (Data Steward)",
+        "created_at": "2026-07-25 10:00 UTC",
+        "active_usage_count": 8
+      },
+      {
+        "template_id": "tmpl_pci_financial_strict",
+        "name": "Plantilla Estricta PCI-DSS & Financiero",
+        "description": "Detección rigurosa de números de tarjeta de crédito, cuentas bancarias IBAN y claves de bóvedas.",
+        "infotypes": [
+          "CREDIT_CARD_NUMBER",
+          "IBAN_BANK_ACCOUNT",
+          "CRYPTO_WALLET_ADDRESS",
+          "INTERNAL_FINANCIAL_VAULT_REF"
+        ],
+        "min_likelihood": "POSSIBLE",
+        "max_findings_per_item": 5000,
+        "created_by": "Javier Mendoza (Lead Architect)",
+        "created_at": "2026-07-26 14:30 UTC",
+        "active_usage_count": 5
+      },
+      {
+        "template_id": "tmpl_secops_credentials_leak",
+        "name": "Plantilla SecOps - Detección de Fuga de Credenciales",
+        "description": "Búsqueda de API Keys, Bearer Tokens, contraseñas y nombres de proyectos secretos en archivos o bases de datos.",
+        "infotypes": [
+          "AUTH_TOKEN",
+          "IP_ADDRESS",
+          "CONFIDENTIAL_PROJECT_CODE"
+        ],
+        "min_likelihood": "VERY_LIKELY",
+        "max_findings_per_item": 100,
+        "created_by": "Javier Mendoza (Lead Architect)",
+        "created_at": "2026-07-27 18:00 UTC",
+        "active_usage_count": 4
+      }
+    ],
+    "deidentify_templates": [
+      {
+        "template_id": "deid_mask_last4_digits",
+        "name": "Enmascaramiento Parcial (Últimos 4 Dígitos Visibles)",
+        "transformation_type": "CHARACTER_MASKING",
+        "description": "Reemplaza todos los caracteres excepto los últimos 4 por asteriscos (*). Ideal para tarjetas y teléfonos.",
+        "parameters": {
+          "masking_character": "*",
+          "number_to_ignore": 4,
+          "reverse_order": true
+        },
+        "sample_input": "4532-8976-1234-5678",
+        "sample_output": "************5678",
+        "created_by": "Lucía Morales (Data Steward)"
+      },
+      {
+        "template_id": "deid_crypto_hash_sha256",
+        "name": "Hash Criptográfico SHA-256 con Salt Administrado",
+        "transformation_type": "CRYPTO_HASH",
+        "description": "Calcula un digest irreversible SHA-256 con sal secreta en Cloud KMS para emails y nombres.",
+        "parameters": {
+          "algorithm": "SHA-256",
+          "kms_key_resource": "projects/corp-analytics-prod/locations/us-central1/keyRings/governance-ring/cryptoKeys/pii-salt-key"
+        },
+        "sample_input": "juan.perez@empresa.com",
+        "sample_output": "8f4b2e86a117b2c9... [Hash Seguro]",
+        "created_by": "Javier Mendoza (Lead Architect)"
+      },
+      {
+        "template_id": "deid_deterministic_tokenization",
+        "name": "Tokenización Criptográfica Determinística (Reversible por IAM)",
+        "transformation_type": "CRYPTO_DETERMINISTIC_TOKENIZATION",
+        "description": "Reemplaza IDs preservando igualdad para consultas JOIN y agregaciones sin exponer el valor original.",
+        "parameters": {
+          "surrogate_infotype": "TOKENIZED_CUSTOMER_ID",
+          "kms_key_resource": "projects/corp-analytics-prod/locations/us-central1/keyRings/governance-ring/cryptoKeys/tokenization-key"
+        },
+        "sample_input": "CLI-98234-US",
+        "sample_output": "SURROGATE_TKN_A82F99B1",
+        "created_by": "Javier Mendoza (Lead Architect)"
+      },
+      {
+        "template_id": "deid_date_shift_random",
+        "name": "Desplazamiento Temporal de Fechas (Date Shifting)",
+        "transformation_type": "DATE_SHIFTING",
+        "description": "Desplaza fechas por un delta pseudoaleatorio por usuario entre -30 y +30 días para proteger anonimato.",
+        "parameters": {
+          "upper_bound_days": 30,
+          "lower_bound_days": -30,
+          "context_field": "customer_id"
+        },
+        "sample_input": "1990-05-20",
+        "sample_output": "1990-06-03 (Desplazado +14d)",
+        "created_by": "Lucía Morales (Data Steward)"
+      }
+    ]
+  },
+  "content_policies": [
+    {
+      "policy_id": "pol_auto_mask_pci_bigquery",
+      "name": "Enmascaramiento Obligatorio PCI en BigQuery",
+      "description": "Si Cloud DLP detecta CREDIT_CARD_NUMBER o IBAN_BANK_ACCOUNT en una tabla de BigQuery, se aplica automáticamente Dynamic Data Masking con Taxonomy_PCI_Restricted.",
+      "severity": "CRÍTICO",
+      "cloud_scope": "GCP BigQuery",
+      "condition_infotypes": [
+        "CREDIT_CARD_NUMBER",
+        "IBAN_BANK_ACCOUNT"
+      ],
+      "action": "AUTO_MASK_DDM",
+      "status": "ENABLED",
+      "compliance_rate_pct": 100.0,
+      "last_enforced": "2026-07-31 16:03 UTC",
+      "enforced_count": 26
+    },
+    {
+      "policy_id": "pol_block_unencrypted_gcs_pii",
+      "name": "Prohibir Objetos con PII Crítica sin CMEK en GCS",
+      "description": "Alerta y pone en cuarentena cualquier bucket o archivo en Cloud Storage que contenga datos de identificación o tokens sin encriptación KMS administrada por el cliente.",
+      "severity": "ALTO",
+      "cloud_scope": "Google Cloud Storage",
+      "condition_infotypes": [
+        "AUTH_TOKEN",
+        "TAX_ID_RFC_SSN",
+        "PASSPORT"
+      ],
+      "action": "QUARANTINE_AND_ALERT_SECOPS",
+      "status": "ENABLED",
+      "compliance_rate_pct": 98.5,
+      "last_enforced": "2026-07-31 16:03 UTC",
+      "enforced_count": 9
+    },
+    {
+      "policy_id": "pol_block_high_risk_rag_export",
+      "name": "Bloqueo de Datasets con PII No Certificada para Vertex AI / RAG",
+      "description": "Impide que los modelos fundacionales Gemini y pipelines de RAG accedan a datasets que no cuenten con certificación del Data Steward y desidentificación aprobada.",
+      "severity": "CRÍTICO",
+      "cloud_scope": "Vertex AI & Data Products",
+      "condition_infotypes": [
+        "PERSON_NAME",
+        "EMAIL_ADDRESS",
+        "PHONE_NUMBER"
+      ],
+      "action": "REVOKE_RAG_PERMISSION",
+      "status": "ENABLED",
+      "compliance_rate_pct": 100.0,
+      "last_enforced": "2026-07-31 16:03 UTC",
+      "enforced_count": 20
+    },
+    {
+      "policy_id": "pol_external_db_egress_guard",
+      "name": "Guardia de Salida para Bases de Datos Externas (MySQL/Azure)",
+      "description": "Monitorea conexiones federadas a MySQL y Azure SQL garantizando que la extracción opere exclusivamente con metadatos y muestras agregadas sin datos directos.",
+      "severity": "MEDIO",
+      "cloud_scope": "Conectores Híbridos & Multi-Cloud",
+      "condition_infotypes": [
+        "*"
+      ],
+      "action": "ENFORCE_METADATA_ONLY_FILTER",
+      "status": "ENABLED",
+      "compliance_rate_pct": 100.0,
+      "last_enforced": "2026-07-31 16:03 UTC",
+      "enforced_count": 44
+    }
+  ]
+}
